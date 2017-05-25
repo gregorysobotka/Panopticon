@@ -65,4 +65,4 @@ GET : {panopticonStatusUrl}
 
 ## Enhancements
 
-- migrate panopticonAddWatcher and panopticonStatus to single worker    
+- migrate panopticonAddWatcher and panopticonStatus to a single webtask function / module 
