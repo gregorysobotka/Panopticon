@@ -2,6 +2,7 @@
 
 var MongoClient = require('mongodb').MongoClient;
 var https = require('https');
+var http = require('http');
 
 module.exports = function(ctx, callback){
 
@@ -20,7 +21,9 @@ module.exports = function(ctx, callback){
 
         docs.map(function(requestContext){
 
-          https.get(requestContext.url, (res) => {
+          let reqProtocolToUse = (requestContext.url.indexOf('https') === 0) ? https : http;
+
+          reqProtocolToUse.get(requestContext.url, (res) => {
 
               let acceptedStatusCodes = new Set(requestContext.statusCodes);
               let statusCode = res.statusCode;

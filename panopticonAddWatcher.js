@@ -10,9 +10,14 @@ module.exports = function(ctx, callback){
   if(typeof postBody === 'undefined' || !postBody.url || !postBody.statusCodes) 
     return callback({"required": "POST:body:url, POST:body:statusCodes"})
 
+  var validStatusCodes = postBody.statusCodes
+    .map((statusCode)=>parseInt(statusCode))
+    .filter((statusCode)=>Number.isInteger(statusCode))
+    .sort();
+
   var newWatcher = {
     url: postBody.url,
-    statusCodes: postBody.statusCodes
+    statusCodes: validStatusCodes
   };
 
   MongoClient.connect(MLabUrl, function(err, db) {

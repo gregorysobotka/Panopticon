@@ -34,12 +34,12 @@ function bodyHtml(){
                 <div class="container">
                     <div class="col-md-10">
                         <h2>Panopticon</h2>
-                        <p>Need to keep an eye on the status of a website or service? Enter the URL and the expected HTTP response codes for that url.</p>
-                        <p>Want to keep an eye on everything yourself? simply make a GET request to <a href="${WebTasksStatusUrl}" target="_blank">this url</a>.</p>
+                        <h4>The all seeing eye of the web</h4>
+                        <p>Need to keep an eye on the status of a website or service? Enter the URL and the expected HTTP response codes for that url. Want to keep an eye on everything yourself? simply make a GET request to <a href="${WebTasksStatusUrl}" target="_blank">this url</a>.</p>
                         <form id="addWatcher">
                             <label>URL to watch</label>
                             <input type="url" id="url" class="form-control form-control-custom" placeholder="URL"/>
-                            <label>Accetpable StatusCodes</label>
+                            <label>Acceptable StatusCodes</label>
                             <input type="text" id="statusCodes" class="form-control form-control-custom" placeholder="200,301,302"/>
                         </form>
                         <button id="submit" class="btn btn-success form-control form-control-custom">Submit</button>

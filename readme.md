@@ -52,9 +52,16 @@ GET : {panopticonStatusUrl}
 
 ## Possible features
 
+- delete functionality (remove watcher)
 - add logic around data verification (useful for REST API's)
     : Expect certain fields to be present and have a type of value (string, int, etc.) OR exact matches
 - add ability to trigger other HTTP Request Methods (put, delete, post)
 - schedule cron to check services (all urls or on a per url basis)
-- publish to AWS sns topic on failure with details
-- allow for status update email (for verified email accounts) on failure
+- logic for handling failures
+    : callback url 
+    : publish message to third party service
+    : allow for status update email (for verified email accounts) on failure
+
+## Enhancements
+
+- migrate panopticonAddWatcher and panopticonStatus to single worker    
