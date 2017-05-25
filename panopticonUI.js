@@ -35,7 +35,8 @@ function bodyHtml(){
                     <div class="col-md-10">
                         <h2>Panopticon</h2>
                         <h4>The all seeing eye of the web</h4>
-                        <p>Need to keep an eye on the status of a website or service? Enter the URL and the expected HTTP response codes for that url. Want to keep an eye on everything yourself? simply make a GET request to <a href="${WebTasksStatusUrl}" target="_blank">this url</a>.</p>
+                        <p>Need to keep an eye on the status of a website or service? Enter the URL and the expected HTTP response codes for that url.</p>
+                        <p>Want to keep an eye on everything yourself? It is as simple as a GET request to <a href="${WebTasksStatusUrl}" target="_blank">this url</a>.</p>
                         <p><a href="https://github.com/gregorysobotka/Panopticon" target="_blank">View project in github</a></p>
                         <form id="addWatcher">
                             <label>URL to watch</label>
