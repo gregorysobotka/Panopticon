@@ -8,7 +8,7 @@ module.exports = function(ctx, callback){
   var postBody = ctx.body;
 
   if(typeof postBody === 'undefined' || !postBody.url || !postBody.statusCodes) 
-    return cb({"required": "POST:body:url, POST:body:statusCodes"})
+    return callback({"required": "POST:body:url, POST:body:statusCodes"})
 
   var newWatcher = {
     url: postBody.url,
@@ -21,7 +21,7 @@ module.exports = function(ctx, callback){
       .collection('watching')
       .insertOne(newWatcher);
 
-    cb(null, newWatcher);
+    callback(null, {"added":newWatcher});
 
   });
 

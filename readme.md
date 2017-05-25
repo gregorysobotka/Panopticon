@@ -30,6 +30,13 @@ POST : {panopticonAddWatcherUrl}
         statusCodes:[200,300] 
     }
 
+    Response: {
+        added: {
+            url:"urlAdded",
+            statusCodes:['status','codes','added']
+        }
+    }
+
 GET : {panopticonStatusUrl}
 
     Response : {

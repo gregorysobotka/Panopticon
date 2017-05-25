@@ -2,10 +2,10 @@ var app = new (require('express'))();
 var wt = require('webtask-tools');
 
 // URL for POST request to add watcher
-const WebTasksAddUrl = "https://wt-71c861dbca0d933900444e2beba407fe-0.run.webtask.io/panopticonAddWatcher";
+const WebTasksAddUrl = "https://wt-8884dbb441ff761156b684c225f8889c-0.run.webtask.io/panopticonAddWatcher";
 
 // URL for GET request to check all watchers
-const WebTasksStatusUrl = "https://wt-71c861dbca0d933900444e2beba407fe-0.run.webtask.io/panopticonStatus";
+const WebTasksStatusUrl = "https://wt-8884dbb441ff761156b684c225f8889c-0.run.webtask.io/panopticonStatus";
 
 /*
     NOTE: UI is for demo purposes only. Do not build UI's like this.
@@ -27,6 +27,7 @@ function bodyHtml(){
                 <style> 
                     .SUCCESS{background-color:#dff0d8;}
                     .FAILURE{background-color:#f2dede;}
+                    .form-control-custom {margin-bottom: 1em;}
                 </style>
             </head>
             <body>
@@ -37,11 +38,11 @@ function bodyHtml(){
                         <p>Want to keep an eye on everything yourself? simply make a GET request to <a href="${WebTasksStatusUrl}" target="_blank">this url</a>.</p>
                         <form id="addWatcher">
                             <label>URL to watch</label>
-                            <input type="url" id="url" class="form-control" placeholder="URL"/>
+                            <input type="url" id="url" class="form-control form-control-custom" placeholder="URL"/>
                             <label>Accetpable StatusCodes</label>
-                            <input type="text" id="statusCodes" class="form-control" placeholder="200,301,302"/>
+                            <input type="text" id="statusCodes" class="form-control form-control-custom" placeholder="200,301,302"/>
                         </form>
-                        <button id="submit" class="btn btn-success form-control">Submit</button>
+                        <button id="submit" class="btn btn-success form-control form-control-custom">Submit</button>
                         <status id="services"></status>
                     </div>
                 </div>
@@ -86,9 +87,8 @@ function bodyHtml(){
                                 contentType: "application/json; charset=utf-8",
                                 dataType: "json"
                             }).done(function() {
-                                window.
-                                // ... status update of some kind 
-
+                                location.reload();
+                                // ... status update of some kind
                             });
 
                         });              
