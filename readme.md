@@ -22,12 +22,13 @@ wt create panopticonUI.js
 
 POST : {panopticonAddWatcherUrl}
 
-    url : string
-    statusCodes: [ints]
-
-    Body: {
-        url: "https://google.com/s=",
-        statusCodes:[200,300] 
+    required fields : ( url:string, statusCodes:[ints] )
+    
+    Request {
+        Body: {
+            url: "https://google.com",
+            statusCodes:[200,300,301] 
+        }
     }
 
     Response: {
