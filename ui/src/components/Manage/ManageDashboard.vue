@@ -60,17 +60,18 @@
   <script>
     export default {
     data: () => ({
-      countryOrRegion: '',
-      countries: ['US','CA','MX','UK','BR','AU', 'IR'],
-      regions: ['EU', 'LATAM', 'NA', 'SA', 'APAC', ],
-      fullDomainURL: '',
-      environment: '',
-      environments: ['production', 'staging', 'integration', 'test', 'development'],
-      language: '',
-      languages: [''],
-      screenSizes: [
-        { width: 1440, height: 1280 }
-      ]
+        companyName: '',
+        countryOrRegion: '',
+        countries: ['US','CA','MX','UK','BR','AU', 'IR'],
+        regions: ['EU', 'LATAM', 'NA', 'SA', 'APAC', ],
+        fullDomainURL: '',
+        environment: '',
+        environments: ['production', 'staging', 'integration', 'test', 'development'],
+        language: '',
+        languages: [''],
+        screenSizes: [
+            { width: 1440, height: 1280 }
+        ]
 
 
 
