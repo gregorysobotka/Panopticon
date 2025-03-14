@@ -15,8 +15,8 @@ router.get('/', async function(req, res, next) {
 
 router.post('/', async function(req, res, next) {
     try {
-        const { name, description, width, height, delay } = req.body;
-        const specObject = { name, description, width, height, delay };
+        const { displayname, description, width, height, delay, browser } = req.body;
+        const specObject = { displayname, description, width, height, delay, browser };
         const createSpec = await CaptureSpecs.create(specObject);
         res.send(createSpec.toJSON());
     } catch(e) {

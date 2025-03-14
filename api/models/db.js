@@ -45,6 +45,10 @@ const CaptureSpecs = sequelize.define('capturespecs', {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
+  browser: {
+    type: DataTypes.TEXT,
+    defaultValue: 'firefox',
+  },
   displayname: DataTypes.TEXT,
   description: DataTypes.TEXT
 });
@@ -66,6 +70,45 @@ const PageCaptureSpecs = sequelize.define('pagecapturespecs', {
   },
 });
 
+/*
+
+  Decided to not maintain link to company/site/page models.
+
+  Reasons:
+  - Wanted to treat results as unique, separate data
+  - Focus on getting MVP running
+
+*/
+
+const PageCapture = sequelize.define('pagecapture', {
+  companyname: DataTypes.TEXT,
+  siteid: DataTypes.INTEGER,
+  pageid: DataTypes.INTEGER,
+  fullurl: DataTypes.TEXT,
+  imageurl: DataTypes.TEXT,
+  location: DataTypes.TEXT,
+  language: DataTypes.TEXT,
+  environment: DataTypes.TEXT,
+  width: DataTypes.INTEGER,
+  height: DataTypes.INTEGER, 
+  delay: DataTypes.INTEGER,
+  year: DataTypes.INTEGER, 
+  month: DataTypes.INTEGER,
+  day: DataTypes.INTEGER,
+  hour: DataTypes.INTEGER,
+  minute: DataTypes.INTEGER
+});
+
+const PageCaptureResult = sequelize.define('pagecaptureresult', {
+  companyname: DataTypes.TEXT,
+  basecaptureid: DataTypes.TEXT,
+  compcaptureid: DataTypes.TEXT,
+  siteid: DataTypes.INTEGER,
+  pageid: DataTypes.INTEGER,
+  fullurl: DataTypes.TEXT,
+  imageurl: DataTypes.TEXT,
+});
+
 Company.hasMany(Site);
 Site.belongsTo(Company);
 
@@ -74,8 +117,6 @@ Page.belongsTo(Site);
 
 Page.hasMany(CaptureSpecs);
 CaptureSpecs.belongsToMany(Page, { through: PageCaptureSpecs });
-// Removing association for now
-
 
 (async () => {
   const forceSync = false;
@@ -100,5 +141,7 @@ module.exports = {
   Company,
   Site,
   Page,
-  CaptureSpecs
+  CaptureSpecs,
+  PageCapture,
+  PageCaptureResult
 };
