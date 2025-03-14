@@ -2,11 +2,78 @@ var express = require('express');
 var router = express.Router();
 const { Company, Site, Page, CaptureSpecs } = require('../models/db');
 
-/* GET companies */
+/*
+    NOTES: 
+    - DO NOT USE `res.status(400).send({ "status": "error", "message": e });` in production. Exposing errors like this provides information that can be used to comprise a site or application.
+*/
+
 router.get('/', async function(req, res, next) {
     try {
         const allCompanies = await Company.findAll();
         res.send(allCompanies);
+    } catch(e) {
+        console.error(e)
+        res.status(400).send({ "status": "error", "message": e });
+    }
+});
+
+router.get('/:companyID/sites', async function(req, res, next) {
+    
+    try {
+
+        const companyID = parseInt(req.params.companyID);
+        
+        const targetSites = await Site.findAll({
+            where: {
+                id: companyID
+            }
+        });
+        
+        res.send(targetSites);
+
+    } catch(e) {
+        console.error(e)
+        res.status(400).send({ "status": "error", "message": e });
+    }
+});
+
+router.get('/:companyID/sites/:siteID/pages', async function(req, res, next) {
+    
+    try {
+
+        const companyID = parseInt(req.params.companyID);
+        const siteID = parseInt(req.params.siteID);
+
+        const allSitePages = await Page.findAll({
+            where: {
+                siteId: siteID
+            },
+        });
+        
+        res.send(allSitePages);
+
+    } catch(e) {
+        console.error(e)
+        res.status(400).send({ "status": "error", "message": e });
+    }
+});
+
+router.get('/:companyID/sites/:siteID/pages/:pageID/specs', async function(req, res, next) {
+    
+    try {
+
+        const companyID = parseInt(req.params.companyID);
+        const siteID = parseInt(req.params.siteID);
+
+        const allSitePages = await Page.findAll({
+            where: {
+                siteId: siteID
+            },
+            include: CaptureSpecs,
+        });
+        
+        res.send(allSitePages);
+
     } catch(e) {
         console.error(e)
         res.status(400).send({ "status": "error", "message": e });
@@ -25,8 +92,7 @@ router.post('/', async function(req, res, next) {
     }
 });
 
-// /companies/:companyID/site
-router.post('/:companyID/site', async function(req, res, next) {
+router.post('/:companyID/sites', async function(req, res, next) {
     
     try {
 
@@ -52,8 +118,7 @@ router.post('/:companyID/site', async function(req, res, next) {
     }
 });
 
-// /companies/companyID/site/siteID
-router.post('/:companyID/site/:siteID/pages', async function(req, res, next) {
+router.post('/:companyID/sites/:siteID/pages', async function(req, res, next) {
     
     try {
 
@@ -80,8 +145,7 @@ router.post('/:companyID/site/:siteID/pages', async function(req, res, next) {
     }
 });
 
-// /companies/companyID/site/siteID/pages/pageID
-router.post('/:companyID/site/:siteID/pages/:pageID', async function(req, res, next) {
+router.post('/:companyID/sites/:siteID/pages/:pageID', async function(req, res, next) {
     
     try {
 
@@ -109,7 +173,7 @@ router.post('/:companyID/site/:siteID/pages/:pageID', async function(req, res, n
 });
 
 // 
-router.post('/:companyID/site/:siteID/pages/:pageID/specs', async function(req, res, next) {
+router.post('/:companyID/sites/:siteID/pages/:pageID/specs', async function(req, res, next) {
     
     try {
 
@@ -136,29 +200,5 @@ router.post('/:companyID/site/:siteID/pages/:pageID/specs', async function(req, 
         res.status(400).send({ "status": "error", "message": e });
     }
 });
-
-// /companies/companyID/site/siteID/pages/pageID
-router.get('/:companyID/site/:siteID/pages/:pageID/specs', async function(req, res, next) {
-    
-    try {
-
-        const companyID = parseInt(req.params.companyID);
-        const siteID = parseInt(req.params.siteID);
-
-        const allSitePages = await Page.findAll({
-            where: {
-                siteId: siteID
-            },
-            include: CaptureSpecs,
-        });
-        
-        res.send(allSitePages);
-
-    } catch(e) {
-        console.error(e)
-        res.status(400).send({ "status": "error", "message": e });
-    }
-});
-
 
 module.exports = router;
