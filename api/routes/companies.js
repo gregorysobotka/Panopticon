@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { Company, Site, Page, CaptureSpecs } = require('../models/db');
-import { Op } from '@sequelize/core';
+const { Op } = require('sequelize');
 
 /*
     NOTES: 
@@ -46,12 +46,6 @@ router.get('/:companyID/sites/:siteID/pages', async function(req, res, next) {
         const companyID = parseInt(req.params.companyID);
         const siteID = parseInt(req.params.siteID);
 
-        // const allSitePages = await Page.findAll({
-        //     where: {
-        //         siteId: siteID
-        //     },
-        // });
-
         const allSitePages = await Company.findOne({
             where: {
                 id: companyID
@@ -59,8 +53,11 @@ router.get('/:companyID/sites/:siteID/pages', async function(req, res, next) {
             include: {
                 model: Site,
                 where: {
-                    id: { [Op.ne]: siteID },
+                    id:siteID
                 },
+                include: {
+                    model: Page
+                }
             }
             
         });
