@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { Company, Site, Page, CaptureSpecs } = require('../models/db');
+import { Op } from '@sequelize/core';
 
 /*
     NOTES: 
@@ -23,10 +24,11 @@ router.get('/:companyID/sites', async function(req, res, next) {
 
         const companyID = parseInt(req.params.companyID);
         
-        const targetSites = await Site.findAll({
+        const targetSites = await Company.findOne({
             where: {
                 id: companyID
-            }
+            },
+            include: Site
         });
         
         res.send(targetSites);
@@ -44,10 +46,23 @@ router.get('/:companyID/sites/:siteID/pages', async function(req, res, next) {
         const companyID = parseInt(req.params.companyID);
         const siteID = parseInt(req.params.siteID);
 
-        const allSitePages = await Page.findAll({
+        // const allSitePages = await Page.findAll({
+        //     where: {
+        //         siteId: siteID
+        //     },
+        // });
+
+        const allSitePages = await Company.findOne({
             where: {
-                siteId: siteID
+                id: companyID
             },
+            include: {
+                model: Site,
+                where: {
+                    id: { [Op.ne]: siteID },
+                },
+            }
+            
         });
         
         res.send(allSitePages);
@@ -82,8 +97,8 @@ router.get('/:companyID/sites/:siteID/pages/:pageID/specs', async function(req, 
 
 router.post('/', async function(req, res, next) {
     try {
-        const { name } = req.body;
-        const companyObject = { name };
+        const { displayname } = req.body;
+        const companyObject = { displayname };
         const createCompany = await Company.create(companyObject);
         res.send(createCompany.toJSON());
     } catch(e) {
@@ -98,7 +113,7 @@ router.post('/:companyID/sites', async function(req, res, next) {
 
         const companyID = parseInt(req.params.companyID);
         
-        const { url, location, language, environment } = req.body;
+        const { url, location, language, environment, displayname } = req.body;
 
         const targetCompany = await Company.findOne({
             where: {
@@ -106,7 +121,7 @@ router.post('/:companyID/sites', async function(req, res, next) {
             }
         });
         
-        const newSite = { url, location, language, environment };
+        const newSite = { url, location, language, environment, displayname };
 
         const createdSite = await targetCompany.createSite(newSite);
         
@@ -125,7 +140,7 @@ router.post('/:companyID/sites/:siteID/pages', async function(req, res, next) {
         const companyID = parseInt(req.params.companyID);
         const siteID = parseInt(req.params.siteID);
         
-        const { path } = req.body;
+        const { path, displayname } = req.body;
 
         const targetSite = await Site.findOne({
             where: {
@@ -133,7 +148,8 @@ router.post('/:companyID/sites/:siteID/pages', async function(req, res, next) {
             }
         });
         
-        const newPage = { path };
+        const newPage = { path, displayname };
+        console.log(newPage);
 
         const createdPage = await targetSite.createPage(newPage);
         
@@ -145,26 +161,48 @@ router.post('/:companyID/sites/:siteID/pages', async function(req, res, next) {
     }
 });
 
-router.post('/:companyID/sites/:siteID/pages/:pageID', async function(req, res, next) {
+// router.post('/:companyID/sites/:siteID/pages/:pageID', async function(req, res, next) {
+    
+//     try {
+
+//         const companyID = parseInt(req.params.companyID);
+//         const siteID = parseInt(req.params.siteID);
+        
+//         const { path, displayname } = req.body;
+
+//         const targetSite = await Site.findOne({
+//             where: {
+//                 id: siteID
+//             }
+//         });
+        
+//         const newPage = { path, displayname };
+
+//         const createdPage = await targetSite.createPage(newPage);
+        
+//         res.send(createdPage.toJSON());
+
+//     } catch(e) {
+//         console.log(e)
+//         res.status(400).send({ "status": "error", "message": e });
+//     }
+// });
+
+router.delete('/:companyID/sites/:siteID/pages/:pageID', async function(req, res, next) {
     
     try {
 
-        const companyID = parseInt(req.params.companyID);
-        const siteID = parseInt(req.params.siteID);
-        
-        const { path } = req.body;
+        // const companyID = parseInt(req.params.companyID);
+        // const siteID = parseInt(req.params.siteID);
+        const pageID = parseInt(req.params.pageID);
 
-        const targetSite = await Site.findOne({
+        const removeSite = await Page.destroy({
             where: {
-                id: siteID
+                id: pageID
             }
         });
         
-        const newPage = { path };
-
-        const createdPage = await targetSite.createPage(newPage);
-        
-        res.send(createdPage.toJSON());
+        res.send(removeSite.toJSON());
 
     } catch(e) {
         console.log(e)

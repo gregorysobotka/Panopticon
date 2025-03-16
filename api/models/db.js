@@ -16,22 +16,49 @@ Production:
 */
 
 const Company = sequelize.define('company', {
-  name: DataTypes.TEXT,
-  // sites: DataTypes.TEXT,
+  displayname: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  active: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+  }
 });
 
 const Site = sequelize.define('site', {
+  displayname: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
   url: DataTypes.TEXT,
   location: DataTypes.TEXT,
   language: DataTypes.TEXT,
   environment: DataTypes.TEXT,
+  active: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+  }
 });
 
 const Page = sequelize.define('page', {
-  path: DataTypes.TEXT
+  displayname: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  path: DataTypes.TEXT,
+  active: {
+    type: DataTypes.BOOLEAN,
+
+    defaultValue: true,
+  }
 });
 
 const CaptureSpecs = sequelize.define('capturespecs', {
+  displayname: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
   width: {
     type: DataTypes.INTEGER,
     allowNull: false
@@ -49,7 +76,10 @@ const CaptureSpecs = sequelize.define('capturespecs', {
     type: DataTypes.TEXT,
     defaultValue: 'firefox',
   },
-  displayname: DataTypes.TEXT,
+  displayname: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
   description: DataTypes.TEXT
 });
 
@@ -82,6 +112,9 @@ const PageCaptureSpecs = sequelize.define('pagecapturespecs', {
 
 const PageCapture = sequelize.define('pagecapture', {
   companyname: DataTypes.TEXT,
+  sitename: DataTypes.TEXT,
+  pagename: DataTypes.TEXT,
+  companyid: DataTypes.INTEGER,
   siteid: DataTypes.INTEGER,
   pageid: DataTypes.INTEGER,
   fullurl: DataTypes.TEXT,
@@ -125,13 +158,6 @@ CaptureSpecs.belongsToMany(Page, { through: PageCaptureSpecs });
 })();
 
 /*
-
-This model requires to be decompisition ...
-
-- Company (brand)
--- location
---- environment
----- languages
 
 */
 

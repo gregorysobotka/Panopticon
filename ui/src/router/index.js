@@ -7,7 +7,62 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
-import { routes } from 'vue-router/auto-routes'
+
+const SiteManagementRoutes = [
+  {
+    path: 'sites/:siteID',
+    name: 'ManageSites',
+    component: () => import(/* webpackChunkName: "home" */ '../pages/manage/sites.vue'),
+    // children: [
+    //   {
+    //     path: ':siteID',
+    //     name: 'Site',
+    //     component: () => import(/* webpackChunkName: "manage" */ '../pages/manage/sites.vue')
+    //   },
+      
+    // ]
+  },
+];
+
+const routes = [
+  {
+    path: '/',
+    component: () => import('../layouts/default.vue'),
+    children: [
+      {
+        path: '',
+        name: 'Home',
+        component: () => import(/* webpackChunkName: "home" */ '../pages/index.vue'),
+      },
+      {
+        path: '/manage',
+        name: 'Manage',
+        component: () => import(/* webpackChunkName: "manage" */ '../pages/manage/index.vue'),
+        children: [
+          {
+            path: '',
+            name: 'ManageHome',
+            component: () => import(/* webpackChunkName: "home" */ '../pages/manage/companies.vue'),
+          },
+          {
+            path: 'companies',
+            name: 'Companies',
+            component: () => import(/* webpackChunkName: "manage" */ '../pages/manage/companies.vue'),
+            children: [
+              {
+                path: ':companyID',
+                name: 'Company',
+                component: () => import(/* webpackChunkName: "manage" */ '../components/Manage/CompaniesDashboard.vue'),
+                children: SiteManagementRoutes
+              }, 
+            ]
+          },
+          
+        ]
+      },
+    ],
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
