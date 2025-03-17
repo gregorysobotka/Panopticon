@@ -3,15 +3,12 @@
   <v-table class="mt-10">
     <thead>
       <tr>
-        <th class="text-left">
-          Name
-        </th>
-        <th class="text-left">
-          Created
-        </th>
-        <th class="text-left">
-          Updated
-        </th>
+        <th class="text-left">Name</th>
+        <th class="text-left">Location</th>
+        <th class="text-left">Env</th>
+        <th class="text-left">Language</th>
+        <th class="text-left">Created</th>
+        <th class="text-left">Updated</th>
       </tr>
     </thead>
     <tbody>
@@ -19,7 +16,10 @@
         v-for="site in sites"
         :key="site.displayname"
       >
-        <td><v-btn variant="text" :to="siteLink(companyID, site.id)">{{ site.displayname }}</v-btn></td>
+        <td><v-btn variant="flat" color="primary" :to="siteLink(companyID, site.id)">{{ site.displayname }}</v-btn></td>
+        <td>{{ site.location }}</td>
+        <td>{{ site.environment }}</td>
+        <td>{{ site.language }}</td>
         <td>{{ site.createdAt }}</td>
         <td>{{ site.updatedAt }}</td>
       </tr>
@@ -51,7 +51,6 @@
           const json = await response.json();
           this.sites = json.sites;
           this.companyName = json.displayname;
-          console.log(json)
 
         } catch (error) {
           console.error(error.message);

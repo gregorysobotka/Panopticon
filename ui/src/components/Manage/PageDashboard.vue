@@ -27,34 +27,37 @@
       </div>
     </v-col>
   </v-row>
-<v-row>
+  <v-row class="mt-10">
+    <v-col cols="12">
+      <h2 class="text-h5 bg-blue-grey-lighten-4 pa-2 text-center">Screen Capture Specs</h2>
+    </v-col>
   <v-col cols="12">
-  <v-table>
-    <thead>
-      <tr>
-        <th class="text-left">Name</th>
-        <th class="text-left">Browser</th>
-        <th class="text-left">Screen Width</th>
-        <th class="text-left">Screen Height</th>
-        <th class="text-left">Delay</th>
-        <th class="text-left">Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        v-for="spec in specs"
-        :key="spec.displayname"
-      >
-        <td>{{ spec.displayname }}</td>
-        <td>{{ spec.browser }}</td>
-        <td>{{ spec.width }}px</td>
-        <td>{{ spec.height }}px</td>
-        <td>{{ spec.delay }}ms</td>
-        <td>{{ spec.description }}</td>
-      </tr>
-    </tbody>
-  </v-table>
-</v-col>
+    <v-table>
+      <thead>
+        <tr>
+          <th class="text-left">Name</th>
+          <th class="text-left">Browser</th>
+          <th class="text-left">Screen Width</th>
+          <th class="text-left">Screen Height</th>
+          <th class="text-left">Delay</th>
+          <th class="text-left">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="spec in specs"
+          :key="spec.displayname"
+        >
+          <td>{{ spec.displayname }}</td>
+          <td>{{ spec.browser }}</td>
+          <td>{{ spec.width }}px</td>
+          <td>{{ spec.height }}px</td>
+          <td>{{ spec.delay }}ms</td>
+          <td>{{ spec.description }}</td>
+        </tr>
+      </tbody>
+    </v-table>
+  </v-col>
 </v-row>
 </template>
 
@@ -107,7 +110,6 @@
             console.error(`Response status: ${response.status}`);
           }
           const json = await response.json();
-          console.log(json)
 
         } catch (error) {
           console.error(error.message);

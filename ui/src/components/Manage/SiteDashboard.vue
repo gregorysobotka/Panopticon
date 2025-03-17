@@ -44,7 +44,7 @@
         v-for="page in pages"
         :key="page.name"
       >
-        <td><v-btn variant="text" :to="pageLink(companyID, siteID, page.id)">{{ page.displayname }}</v-btn></td>
+        <td><v-btn variant="flat" color="primary" :to="pageLink(companyID, siteID, page.id)">{{ page.displayname }}</v-btn></td>
         <td>{{ page.createdAt }}</td>
         <td>{{ page.updatedAt }}</td>
       </tr>
