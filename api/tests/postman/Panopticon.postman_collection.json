@@ -1,0 +1,467 @@
+{
+	"info": {
+		"_postman_id": "d4515df0-4054-4b9a-b885-8ff70bb7c33d",
+		"name": "Panopticon",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11780941"
+	},
+	"item": [
+		{
+			"name": "Dashboard Management",
+			"item": [
+				{
+					"name": "Capture Specs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/capture",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"capture"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add capture sizes",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"width\": 1400,\n    \"height\": 2440,\n    \"displayname\": \"desktop one\",\n    \"delay\": 3000,\n    \"description\": \"Default desktop size\",\n    \"browser\": \"firefox\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/capture",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"capture"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Companies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/companies",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"companies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Company Sites",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/companies/{{companyID}}/sites",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"companies",
+						"{{companyID}}",
+						"sites"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pages for site",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/companies/{{companyID}}/sites/{{siteID}}/pages",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"companies",
+						"{{companyID}}",
+						"sites",
+						"{{siteID}}",
+						"pages"
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "https://test.com",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "us",
+							"disabled": true
+						},
+						{
+							"key": "language",
+							"value": "en",
+							"disabled": true
+						},
+						{
+							"key": "environment",
+							"value": "productio",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Capture specs for pages",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/companies/{{companyID}}/sites/{{siteID}}/pages/{{pageID}}/specs",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"companies",
+						"{{companyID}}",
+						"sites",
+						"{{siteID}}",
+						"pages",
+						"{{pageID}}",
+						"specs"
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "https://test.com",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "us",
+							"disabled": true
+						},
+						{
+							"key": "language",
+							"value": "en",
+							"disabled": true
+						},
+						{
+							"key": "environment",
+							"value": "productio",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Company",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"displayname\": \"Example company two\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/companies",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"companies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add site for company",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"displayname\": \"US Site 1\",\n    \"url\": \"https://test3.com\",\n    \"location\": \"us\",\n    \"language\": \"en\",\n    \"environment\": \"production\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/companies/{{companyID}}/sites",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"companies",
+						"{{companyID}}",
+						"sites"
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "https://test.com",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "us",
+							"disabled": true
+						},
+						{
+							"key": "language",
+							"value": "en",
+							"disabled": true
+						},
+						{
+							"key": "environment",
+							"value": "productio",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add page for site",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"path\": \"\",\n    \"displayname\": \"Home Page\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/companies/{{companyID}}/sites/{{siteID}}/pages",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"companies",
+						"{{companyID}}",
+						"sites",
+						"{{siteID}}",
+						"pages"
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "https://test.com",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "us",
+							"disabled": true
+						},
+						{
+							"key": "language",
+							"value": "en",
+							"disabled": true
+						},
+						{
+							"key": "environment",
+							"value": "productio",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add page for site Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"path\": \"/relative/path\",\n    \"displayname\": \"Home Page\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/companies/{{companyID}}/sites/{{siteID}}/pages/{{pageID}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"companies",
+						"{{companyID}}",
+						"sites",
+						"{{siteID}}",
+						"pages",
+						"{{pageID}}"
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "https://test.com",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "us",
+							"disabled": true
+						},
+						{
+							"key": "language",
+							"value": "en",
+							"disabled": true
+						},
+						{
+							"key": "environment",
+							"value": "productio",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add page capture spec",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"width\": 1400,\n    \"height\": 2222,\n    \"displayname\": \"desktop one\",\n    \"delay\": 3300,\n    \"description\": \"Desktop Size\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/companies/{{companyID}}/sites/{{siteID}}/pages/{{pageID}}/specs",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"companies",
+						"{{companyID}}",
+						"sites",
+						"{{siteID}}",
+						"pages",
+						"{{pageID}}",
+						"specs"
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "https://test.com",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "us",
+							"disabled": true
+						},
+						{
+							"key": "language",
+							"value": "en",
+							"disabled": true
+						},
+						{
+							"key": "environment",
+							"value": "productio",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete site for company",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"displayname\": \"US Site\",\n    \"url\": \"https://test3.com\",\n    \"location\": \"us\",\n    \"language\": \"en\",\n    \"environment\": \"production\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/companies/{{companyID}}/sites",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"companies",
+						"{{companyID}}",
+						"sites"
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "https://test.com",
+							"disabled": true
+						},
+						{
+							"key": "location",
+							"value": "us",
+							"disabled": true
+						},
+						{
+							"key": "language",
+							"value": "en",
+							"disabled": true
+						},
+						{
+							"key": "environment",
+							"value": "productio",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
