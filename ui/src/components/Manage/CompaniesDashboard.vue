@@ -1,6 +1,6 @@
 <template>
-  <h1>Companies</h1>
-  <v-table>
+  <h1 class="text-h4">Companies</h1>
+  <v-table class="mt-10">
     <thead>
       <tr>
         <th class="text-left">

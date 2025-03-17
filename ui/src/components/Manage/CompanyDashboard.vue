@@ -1,5 +1,5 @@
 <template>
-  <h1>{{companyName}}</h1>
+  <h1 class="text-h4">{{companyName}}</h1>
   <v-table class="mt-10">
     <thead>
       <tr>
@@ -62,9 +62,7 @@
     computed: {},
     data: () => ({
       companyName: '',
-      sites: [
-        
-      ],
+      sites: []
     }),
   }
 </script>

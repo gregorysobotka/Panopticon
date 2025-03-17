@@ -61,6 +61,7 @@ router.get('/:companyID/sites/:siteID/pages', async function(req, res, next) {
             }
             
         });
+        console.log('allSitePages: ', allSitePages)
         
         res.send(allSitePages);
 
@@ -76,15 +77,36 @@ router.get('/:companyID/sites/:siteID/pages/:pageID/specs', async function(req, 
 
         const companyID = parseInt(req.params.companyID);
         const siteID = parseInt(req.params.siteID);
+        const pageID = parseInt(req.params.pageID);
 
-        const allSitePages = await Page.findAll({
-            where: {
-                siteId: siteID
-            },
-            include: CaptureSpecs,
-        });
+        // const allSitePages = await Page.findAll({
+        //     where: {
+        //         siteId: siteID
+        //     },
+        //     include: CaptureSpecs,
+        // });
         
-        res.send(allSitePages);
+        const allSitePageSpecs = await Company.findOne({
+            where: {
+                id: companyID
+            },
+            include: {
+                model: Site,
+                where: {
+                    id:siteID
+                },
+                include: {
+                    model: Page,
+                    where: {
+                        id: pageID
+                    },
+                    include: CaptureSpecs
+                }
+            }
+            
+        });
+
+        res.send(allSitePageSpecs);
 
     } catch(e) {
         console.error(e)

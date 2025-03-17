@@ -1,9 +1,9 @@
 <template>
-  <SiteDashboard v-if="activeSite" :companyID :siteID />
+  <PageDashboard v-if="activePage" :companyID :siteID :pageID />
 </template>
 
 <script>
-  import SiteDashboard from '@/components/Manage/SiteDashboard.vue';
+  import PageDashboard from '@/components/Manage/PageDashboard.vue';
 
   export default {
       beforeMount: function(){},  
@@ -17,7 +17,10 @@
           companyID() {
               return this.$route.params.companyID;
           },
-          activeSite(){
+          pageID() {
+              return this.$route.params.pageID;
+          },
+          activePage(){
             return !!this.$route.params.siteID;
           }
       }

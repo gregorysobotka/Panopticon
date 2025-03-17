@@ -10,24 +10,24 @@ import { setupLayouts } from 'virtual:generated-layouts'
 
 const SiteManagementRoutes = [
   {
-    path: 'sites/:siteID',
+    path: 'sites',
     name: 'ManageSites',
     component: () => import(/* webpackChunkName: "home" */ '../pages/manage/sites.vue'),
-    // children: [
-    //   {
-    //     path: ':siteID',
-    //     name: 'Site',
-    //     component: () => import(/* webpackChunkName: "manage" */ '../pages/manage/sites.vue')
-    //   },
+    children: [
+      {
+        path: ':siteID',
+        name: 'Site',
+        component: () => import(/* webpackChunkName: "manage" */ '../pages/manage/sites.vue')
+      },
       
-    // ]
+    ]
   },
 ];
 
 const routes = [
   {
     path: '/',
-    component: () => import('../layouts/default.vue'),
+    // component: () => import('../layouts/default.vue'),
     children: [
       {
         path: '',
@@ -42,22 +42,25 @@ const routes = [
           {
             path: '',
             name: 'ManageHome',
-            component: () => import(/* webpackChunkName: "home" */ '../pages/manage/companies.vue'),
+            component: () => import(/* webpackChunkName: "manage" */ '../pages/manage/companies.vue'),
           },
           {
-            path: 'companies',
-            name: 'Companies',
+            path: 'companies/:companyID',
+            name: 'ManageCompany',
             component: () => import(/* webpackChunkName: "manage" */ '../pages/manage/companies.vue'),
-            children: [
-              {
-                path: ':companyID',
-                name: 'Company',
-                component: () => import(/* webpackChunkName: "manage" */ '../components/Manage/CompaniesDashboard.vue'),
-                children: SiteManagementRoutes
-              }, 
-            ]
           },
-          
+          {
+            path: 'companies/:companyID/sites/:siteID',
+            name: 'Site',
+            component: () => import(/* webpackChunkName: "manage" */ '../pages/manage/sites.vue'),
+            
+          },
+          {
+            path: 'companies/:companyID/sites/:siteID/pages/:pageID',
+            name: 'Page',
+            component: () => import(/* webpackChunkName: "manage" */ '../pages/manage/pages.vue'),
+            
+          },
         ]
       },
     ],
