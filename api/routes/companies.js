@@ -61,7 +61,6 @@ router.get('/:companyID/sites/:siteID/pages', async function(req, res, next) {
             }
             
         });
-        console.log('allSitePages: ', allSitePages)
         
         res.send(allSitePages);
 
@@ -168,7 +167,6 @@ router.post('/:companyID/sites/:siteID/pages', async function(req, res, next) {
         });
         
         const newPage = { path, displayname };
-        console.log(newPage);
 
         const createdPage = await targetSite.createPage(newPage);
         
