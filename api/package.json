@@ -7,6 +7,7 @@
     "nmon": "nodemon ./bin/www"
   },
   "dependencies": {
+    "chromium": "^3.0.3",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
@@ -15,6 +16,7 @@
     "morgan": "~1.9.1",
     "pg": "^8.13.3",
     "pg-hstore": "^2.3.4",
+    "playwright": "^1.51.1",
     "sequelize": "^6.37.6",
     "swagger-ui-express": "^5.0.1",
     "yaml": "^2.7.0"
