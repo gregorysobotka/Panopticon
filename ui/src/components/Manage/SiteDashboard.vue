@@ -98,6 +98,12 @@
         <th class="text-left">
           Updated
         </th>
+        <th>
+          Capture
+        </th>
+        <th>
+          History
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -105,9 +111,11 @@
         v-for="page in pages"
         :key="page.name"
       >
-        <td><v-btn variant="flat" color="primary" :to="pageLink(companyID, siteID, page.id)">{{ page.displayname }}</v-btn></td>
+        <td><v-btn variant="flat" color="" :to="pageLink(companyID, siteID, page.id)">{{ page.displayname }}</v-btn></td>
         <td>{{ page.createdAt }}</td>
         <td>{{ page.updatedAt }}</td>
+        <td><v-icon icon="mdi-record-circle" color="red" @click="" start disabled/></td>
+        <td><v-icon icon="mdi-history" @click="" start disabled/></td>
       </tr>
     </tbody>
   </v-table>
@@ -125,6 +133,9 @@
     },
     methods: {
       pageLink: (companyID, siteID, pageID) => `/manage/companies/${companyID}/sites/${siteID}/pages/${pageID}`,
+      captureReq: async function() {
+
+      },
       addPageReq: async function() {
         try {
 

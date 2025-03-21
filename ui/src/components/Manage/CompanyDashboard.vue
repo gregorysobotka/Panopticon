@@ -104,7 +104,7 @@
             v-for="site in sites"
             :key="site.displayname"
           >
-            <td><v-btn variant="flat" color="primary" :to="siteLink(companyID, site.id)">{{ site.displayname }}</v-btn></td>
+            <td><v-btn variant="flat" color="" :to="siteLink(companyID, site.id)">{{ site.displayname }}</v-btn></td>
             <td>{{ site.url }}</td>
             <td>{{ site.location }}</td>
             <td>{{ site.environment }}</td>
