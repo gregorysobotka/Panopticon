@@ -56,6 +56,12 @@ const routes = [
             
           },
           {
+            path: 'companies/:companyID/sites/:siteID/capture',
+            name: 'SiteCapture',
+            component: () => import(/* webpackChunkName: "manage" */ '../pages/manage/sitesCapture.vue'),
+            
+          },
+          {
             path: 'companies/:companyID/sites/:siteID/pages/:pageID',
             name: 'Page',
             component: () => import(/* webpackChunkName: "manage" */ '../pages/manage/pages.vue'),
