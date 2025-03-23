@@ -13,6 +13,9 @@ const API_ROUTES = {
     createNewSite: (companyID) => `${API_URL}/companies/${companyID}/sites`,
     createNewPage: (companyID, siteID) => `${API_URL}/companies/${companyID}/sites/${siteID}/pages`,
     createNewPageSpec: (companyID, siteID, pageID) => `${API_URL}/companies/${companyID}/sites/${siteID}/pages/${pageID}/specs`,
+    createNewCapture: () => `${API_URL}/capture/page`
+
+
 };
 
 export default API_ROUTES;

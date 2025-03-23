@@ -28,14 +28,14 @@
       <v-progress-linear
         v-if="scanInProgress"
         color="light-blue"
-        height="15"
+        height="30"
         :model-value="scanProgress"
-        class="my-5"
+        class="my-4"
         striped
-      ></v-progress-linear>
+      > {{scanProgress}}% </v-progress-linear>
       <v-btn
         v-else="scanInProgress"
-        @click="startScan"
+        @click="startSiteScan"
         class="ma-2"
         color="primary"
       >
@@ -82,14 +82,19 @@
         <td>{{spec.width}}px</td>
         <td>{{spec.height}}px</td>
         <td>{{spec.browser}}</td>
-        <td><v-icon
+        <td>
+          <v-icon
             color="grey"
             icon="mdi-circle-small"
             size="large"
-          ></v-icon>
+          />
         </td>
         <td>
-          <v-btn @click="spec.captured = !spec.captured">{{spec.captured}}</v-btn>
+          <v-icon
+            :color="(spec.captured) ? 'green' : 'grey'"
+            icon="mdi-circle"
+            size="large"
+          />
         </td>
       </tr>
     </tbody>
@@ -109,30 +114,33 @@
     },
     methods: {
       pageLink: (companyID, siteID, pageID) => `/manage/companies/${companyID}/sites/${siteID}/pages/${pageID}`,
-      captureReq: async function() {
+      captureReq: async function(spec) {
 
-      },
-      startScan: function() {
-        this.scanInProgress = true;
-      },
-      startSiteScan: async function() {
-        try {
-
-          const createNewPageURL = apiRoutes.createNewPage(this.companyID, this.siteID);
-          
-          const request = new Request(createNewPageURL, {
+        const sitePageCapture = apiRoutes.createNewCapture()
+        
+        const request = new Request(sitePageCapture, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            // body: JSON.stringify()
+            body: JSON.stringify(spec)
           });
 
-          const startScanReq = await fetch(request);
-          
+        const captureResponse = await fetch(request);
 
-        } catch (error) {
-          console.error(error.message);
-        }
-      
+        const json = await captureResponse.json();
+
+        spec.captured = true;
+        this.scansCompleted = this.scansCompleted + 1;
+
+      },
+      startSiteScan: async function() {
+
+        this.scanInProgress = true;
+
+        const completed = this.sitePageSpecs.map(async (spec) => {
+          await this.captureReq(spec)
+        });
+
+        
       },
       getSitePages: async function() {
 
@@ -153,6 +161,10 @@
               (spec) => { 
                 sitePageSpecs.push({
                   uid: `s${sites.id}-p${page.id}-s${spec.id}`,
+                  companyID: json.id,
+                  siteID: sites.id,
+                  pageID: page.id,
+                  specID: spec.id,
                   sitename: sites.displayname,
                   pagename: page.displayname,
                   url: sites.url,
@@ -186,7 +198,7 @@
           console.error(error.message);
         }
         
-      }
+      },
     },
     computed: {
       scanProgress(){
@@ -196,15 +208,16 @@
           return (this.scansCompleted / this.sitePageSpecs.length) * 100;
         }
       },
-      scansCompleted() {
-        return this.sitePageSpecs.reduce((count, spec) => (spec.captured) ? count + 1 : count, 0);
-      },
+      // scansCompleted() {
+      //   return this.sitePageSpecs.reduce((count, spec) => (spec.captured) ? count + 1 : count, 0);
+      // },
       maxScanCount() {
         return this.sitePageSpecs.length;
       }
     },
     data: () => ({
       scanInProgress: false,
+      scansCompleted: 0,
       sitePageSpecs: [],
       companyname: '',
       sitename: '',
