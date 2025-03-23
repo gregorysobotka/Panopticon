@@ -56,7 +56,10 @@ router.get('/:companyID/sites/:siteID/pages', async function(req, res, next) {
                     id:siteID
                 },
                 include: {
-                    model: Page
+                    model: Page,
+                    include: {
+                        model: CaptureSpecs
+                    }
                 }
             }
             
@@ -77,13 +80,6 @@ router.get('/:companyID/sites/:siteID/pages/:pageID/specs', async function(req, 
         const companyID = parseInt(req.params.companyID);
         const siteID = parseInt(req.params.siteID);
         const pageID = parseInt(req.params.pageID);
-
-        // const allSitePages = await Page.findAll({
-        //     where: {
-        //         siteId: siteID
-        //     },
-        //     include: CaptureSpecs,
-        // });
         
         const allSitePageSpecs = await Company.findOne({
             where: {
