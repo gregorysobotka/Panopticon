@@ -4,7 +4,6 @@
       <span class="text-h3">{{activeCompanyName}}</span> <span class="text-h5">{{activeSiteName}}</span>
     </v-col>
   </v-row>
-  <img src="./bda56ab1ad04e619731bc862f1d86eff.png" />
   <v-row v-if="captureHistory.length > 0"> 
     <v-col cols="6"> 
       <v-select
@@ -37,18 +36,26 @@
     </v-col>
   </v-row>
 
-  <v-row>
+  <v-row v-if="activeComparison">
     <v-col cols="4">
+      <p class="text-center bg-grey py-2 mb-2">Version 1</p>
       <v-row v-for="capture in baseCaptures">
         <v-col>
-          {{capture}}
-          <img :src="`../../../../capture/${capture.filename}`" />
-
+          <v-img :src="getImageURL(capture.filename)" />
         </v-col>
       </v-row>
     </v-col>
-    <v-col cols="4">{{compCaptures}}</v-col>
-    <v-col cols="4"></v-col>
+    <v-col cols="4">
+      <p class="text-center bg-grey py-2 mb-2">Version 2</p>
+      <v-row v-for="capture in compCaptures">
+        <v-col>
+          <v-img :src="getImageURL(capture.filename)" />
+        </v-col>
+      </v-row>
+    </v-col>
+    <v-col cols="4">
+      <p class="text-center bg-grey py-2 mb-2">Difference</p>
+    </v-col>
   </v-row>
 </template>
 
@@ -75,6 +82,10 @@
     },
     watch: {},
     methods: {
+      getImageURL(filename) {
+        const baseURL = 'http://localhost:3000';
+        return `${baseURL}/${filename}`;
+      },
       readableDate: function (date) {
         const parsedDate = dateFormat.parse(dateFormat.ISO8601_WITH_TZ_OFFSET_FORMAT, date);
         return parsedDate.toString();
@@ -102,6 +113,9 @@
         
       },
       startComparison: async function() {
+
+        this.activeComparison = true; 
+
         const selectedBase = this.selectedBase;
         const selectedComp = this.selectedComp;
 
@@ -186,6 +200,7 @@
       }
     },
     data: () => ({
+      activeComparison: false,
       imgpath: '../../../../capture/',
       compCaptures: [],
       baseCaptures: [],
