@@ -22,6 +22,19 @@
         ></v-icon>
         Page
       </v-btn>
+      <v-btn
+        :to="`/manage/companies/${companyID}/sites/${siteID}/capture`"
+        class="mt-2"
+        color="success"
+        flat
+        block
+      >
+        <v-icon
+          icon="mdi-plus"
+          start
+        ></v-icon>
+        Capture
+      </v-btn>
     </v-col>
     <v-col cols="12">
       <div class="d-flex justify-left ga-2">
@@ -99,9 +112,6 @@
           Updated
         </th>
         <th>
-          Capture
-        </th>
-        <th>
           History
         </th>
       </tr>
@@ -114,7 +124,6 @@
         <td><v-btn variant="flat" color="" :to="pageLink(companyID, siteID, page.id)">{{ page.displayname }}</v-btn></td>
         <td>{{ page.createdAt }}</td>
         <td>{{ page.updatedAt }}</td>
-        <td><v-icon icon="mdi-record-circle" color="red" @click="" start disabled/></td>
         <td><v-icon icon="mdi-history" @click="" start disabled/></td>
       </tr>
     </tbody>

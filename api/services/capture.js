@@ -43,11 +43,11 @@ function captureObj(allSitePageSpecs) {
         const page = allSitePageSpecs.sites[0].pages[0];
         const fullPageURL = `${site.url}${page.path}`;
         const captureSpec = allSitePageSpecs.sites[0].pages[0].capturespecs[0];
-
-        const filename = captureHash(fullPageURL);
+        const filenameHash = captureHash(fullPageURL);
+        const filename = `${filenameHash}.png`;
 
         // Potential refactor. Update DB model to only track file name, storage type (ie. cloud vs disk), storage location (bucket for cloud, path for disk)
-        const filePath = `../capture/${filename}.png`;
+        const filePath = `../capture/${filename}`;
 
         const fullSiteCaptureObject = {
             companyname: allSitePageSpecs.displayname,
@@ -58,6 +58,7 @@ function captureObj(allSitePageSpecs) {
             pageid: page.id,
             fullurl: fullPageURL,
             imageurl: filePath,
+            filename: filename,
             location: site.location,
             language: site.language,
             environment: site.environment,

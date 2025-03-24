@@ -26,6 +26,57 @@ router.post('/', async function(req, res, next) {
     }
 });
 
+router.get('/companies/:companyID/sites/:siteID/history', async function(req, res, next) {
+    
+    const companyID = parseInt(req.params.companyID);
+    const siteID = parseInt(req.params.siteID);
+    const { groupID } = req.params;
+
+    try {
+
+        const groupConstraints = ['year','month','day', 'hour', 'minute'];
+
+        const allCompanySitePageCaptures = await PageCapture.findAll({
+
+            attributes: ['year', 'month', 'day', 'hour','minute', 'groupid', 'createdAt'],
+            where: {
+                companyid: companyID,
+                siteid: siteID
+            },
+            group: groupConstraints
+            
+        });
+    
+
+        res.send(allCompanySitePageCaptures);
+
+    } catch(e) {
+        console.error(e)
+        res.status(400).send({ "status": "error", "message": "error handling request" });
+    }
+});
+
+router.get('/history/:groupID', async function(req, res, next) {
+
+    const { groupID } = req.params;
+
+    try {
+
+        const allCompanySitePageCaptures = await PageCapture.findAll({
+            where: {
+                groupid: groupID
+            }
+        });
+    
+
+        res.send(allCompanySitePageCaptures);
+
+    } catch(e) {
+        console.error(e)
+        res.status(400).send({ "status": "error", "message": "error handling request" });
+    }
+});
+
 /*
     Post: /capture/page
     Body: 
@@ -39,7 +90,7 @@ router.post('/', async function(req, res, next) {
 
 router.post('/page', async function(req, res, next) {
     
-    const { companyID, siteID, pageID, specID } = req.body;
+    const { companyID, siteID, pageID, specID, groupID } = req.body;
 
     try {
 
@@ -75,7 +126,8 @@ router.post('/page', async function(req, res, next) {
         // Generate Screenshot 
         const captureResult = await screenCapture(captureDetails);
         
-        // Insert record of screenshot capture
+        // Insert record of screenshot capture, adding group id
+        captureDetails.groupid = groupID;
         const createPageCaptureEvent = await PageCapture.create(captureDetails);
 
         res.send(createPageCaptureEvent);

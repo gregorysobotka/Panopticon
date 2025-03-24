@@ -8,22 +8,6 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 
-const SiteManagementRoutes = [
-  {
-    path: 'sites',
-    name: 'ManageSites',
-    component: () => import(/* webpackChunkName: "home" */ '../pages/manage/sites.vue'),
-    children: [
-      {
-        path: ':siteID',
-        name: 'Site',
-        component: () => import(/* webpackChunkName: "manage" */ '../pages/manage/sites.vue')
-      },
-      
-    ]
-  },
-];
-
 const routes = [
   {
     path: '/',
@@ -34,6 +18,24 @@ const routes = [
         name: 'Home',
         component: () => import(/* webpackChunkName: "home" */ '../pages/index.vue'),
       },
+      {
+        path: '/compare',
+        name: 'Compare',
+        component: () => import(/* webpackChunkName: "manage" */ '../pages/compare.vue'),
+        children: [
+          {
+            path: 'companies/:companyID/sites/:siteID',
+            name: 'TemporalSelector',
+            component: () => import(/* webpackChunkName: "manage" */ '../components/Compare/TemporalSelector.vue'),
+          },
+          {
+            path: '',
+            name: 'CompareHome',
+            component: () => import(/* webpackChunkName: "manage" */ '../components/Compare/CompareSelector.vue'),
+          }
+        ]
+      },
+          
       {
         path: '/manage',
         name: 'Manage',

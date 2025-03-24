@@ -111,6 +111,10 @@ const PageCaptureSpecs = sequelize.define('pagecapturespecs', {
 */
 
 const PageCapture = sequelize.define('pagecapture', {
+  groupid: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
   companyname: DataTypes.TEXT,
   sitename: DataTypes.TEXT,
   pagename: DataTypes.TEXT,
@@ -118,6 +122,7 @@ const PageCapture = sequelize.define('pagecapture', {
   siteid: DataTypes.INTEGER,
   pageid: DataTypes.INTEGER,
   fullurl: DataTypes.TEXT,
+  filename: DataTypes.TEXT,
   imageurl: DataTypes.TEXT,
   location: DataTypes.TEXT,
   language: DataTypes.TEXT,
