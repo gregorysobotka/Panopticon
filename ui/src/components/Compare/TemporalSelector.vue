@@ -33,35 +33,25 @@
       </v-btn>
     </v-col>
   </v-row>
+  <v-row v-for="capture in combinedGroupCapturesRef" v-if="activeComparison" class="my-5">
+    <v-col cols="12" class="pa-0 ma-0"> 
+      <p class="text-center bg-black py-1 mb-0 text-h6">PAGE [ {{capture.base.pagename}} ] - {{capture.base.width}}px x {{capture.base.height}}px - language:{{capture.base.language}} - environment: {{capture.base.environment}}</p>
+    </v-col>
+    <v-col cols="4">
+      <p class="text-center bg-grey-darken-2 py-2 mb-2">V1</p>
+      <v-img :src="getImageURL(capture.base.filename)" />
+    </v-col>
 
-  <v-row v-if="activeComparison">
     <v-col cols="4">
-      <p class="text-center bg-grey-darken-2 py-2 mb-2">Version 1</p>
-      <v-row v-for="capture in baseCaptures">
-        <v-col>
-          <p class="text-center bg-grey-lighten-2 py-2 mb-2">{{capture.pagename}}</p>
-          <v-img :src="getImageURL(capture.filename)" />
-        </v-col>
-      </v-row>
+      <p class="text-center bg-grey-darken-2 py-2 mb-2">V2</p>
+      <!-- <p class="text-center bg-grey-lighten-2 py-2 mb-2">{{capture.comp.pagename}}</p> -->
+      <v-img :src="getImageURL(capture.comp.filename)" />
     </v-col>
+
     <v-col cols="4">
-      <p class="text-center bg-grey-darken-2 py-2 mb-2">Version 2</p>
-      <v-row v-for="capture in compCaptures">
-        <v-col>
-          <p class="text-center bg-grey-lighten-2 py-2 mb-2">{{capture.pagename}}</p>
-          <v-img :src="getImageURL(capture.filename)" />
-        </v-col>
-      </v-row>
-    </v-col>
-    <v-col cols="4">
-      <p class="text-center bg-grey py-2 mb-2">Difference</p>
+      <p class="text-center bg-grey-darken-2 py-2 mb-2">Diff</p>
       <!-- Temporary solution, need to refactor entire component to organize grouping of captures-->
-       <v-row v-for="imgurl in combinedGroupCaptures">
-        <v-col>
-          <p class="text-center bg-grey-lighten-2 py-2 mb-2">DIFF</p>
-          <v-img :src="imgurl" />
-        </v-col>
-      </v-row>
+      <v-img :src="deltaImage(capture.base.filename, capture.comp.filename)" />
     </v-col>
   </v-row>
 </template>
@@ -138,37 +128,32 @@
         this.compCaptures = compCaptures;
         this.combinedGroupID = combinedGroupID;
 
-        this.compareCaptures(combinedGroupID, baseCaptures, compCaptures);
-
-        
-
-      },
-
-      compareCaptures: async function(cgid, baseCaptures, compCaptures) {
-        
-        // THIS WILL BE COMPLETELY RE-WRITTEN
-
-        const sharedHash = {};
+        const shareHashRef = {};
 
         baseCaptures.forEach((capture) => {
           const uid = `s${capture.siteid}-p${capture.pageid}-w${capture.width}-h${capture.height}`;
           capture.uid = uid;
-          sharedHash[uid] = { base: capture.filename, comp: ''};
+          shareHashRef[uid] = { base: capture, comp: {}};
         });
 
         compCaptures.forEach((capture) => {
           const uid = `s${capture.siteid}-p${capture.pageid}-w${capture.width}-h${capture.height}`;
           capture.uid = uid;
-          sharedHash[uid].comp = capture.filename;
+          shareHashRef[uid].comp = capture;
         });
 
-        Object.keys(sharedHash).forEach((key) => {
-          const baseimg = sharedHash[key].base;
-          const compimg = sharedHash[key].comp;
-          const combinedImages = `/api/capture/image/diff/${baseimg}/${compimg}`;
-          this.combinedGroupCaptures.push(combinedImages);
+        const combinedList = [];
+
+        Object.keys(shareHashRef).forEach((key) => {
+          combinedList.push(shareHashRef[key]);
         });
 
+        this.combinedGroupCapturesRef = combinedList
+
+      },
+
+      deltaImage(v1, v2){
+        return `/api/capture/image/diff/${v1}/${v2}`;
       },
       getGroupedCaptures: async function(groupID) {
 
@@ -242,9 +227,9 @@
     },
     data: () => ({
       combinedGroupCaptures: [],
+      combinedGroupCapturesRef:[],
       combinedGroupID: '',
       activeComparison: false,
-      imgpath: '../../../../capture/',
       compCaptures: [],
       baseCaptures: [],
       captureHistory: [],
