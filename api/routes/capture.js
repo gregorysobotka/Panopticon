@@ -58,7 +58,10 @@ router.get('/companies/:companyID/sites/:siteID/history', async function(req, re
                 companyid: companyID,
                 siteid: siteID
             },
-            group: groupConstraints
+            group: groupConstraints,
+            order: [
+                ['createdAt', 'DESC'],
+            ]
             
         });
     
