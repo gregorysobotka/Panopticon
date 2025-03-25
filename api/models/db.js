@@ -111,6 +111,10 @@ const PageCaptureSpecs = sequelize.define('pagecapturespecs', {
 */
 
 const PageCapture = sequelize.define('pagecapture', {
+  groupid: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
   companyname: DataTypes.TEXT,
   sitename: DataTypes.TEXT,
   pagename: DataTypes.TEXT,
@@ -118,6 +122,7 @@ const PageCapture = sequelize.define('pagecapture', {
   siteid: DataTypes.INTEGER,
   pageid: DataTypes.INTEGER,
   fullurl: DataTypes.TEXT,
+  filename: DataTypes.TEXT,
   imageurl: DataTypes.TEXT,
   location: DataTypes.TEXT,
   language: DataTypes.TEXT,
@@ -142,6 +147,24 @@ const PageCaptureResult = sequelize.define('pagecaptureresult', {
   imageurl: DataTypes.TEXT,
 });
 
+const PageCaptureDiffs = sequelize.define('pagecapturediffs', {
+  pcid: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: PageCapture, 
+      key: 'id',
+    },
+  },
+  pcrid: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: PageCaptureResult,
+      key: 'id',
+    },
+  },
+});
+
+
 Company.hasMany(Site);
 Site.belongsTo(Company);
 
@@ -150,6 +173,9 @@ Page.belongsTo(Site);
 
 Page.hasMany(CaptureSpecs);
 CaptureSpecs.belongsToMany(Page, { through: PageCaptureSpecs });
+
+PageCapture.hasMany(PageCaptureResult);
+PageCaptureResult.belongsToMany(PageCapture, { through: PageCaptureDiffs });
 
 (async () => {
   const forceSync = false;

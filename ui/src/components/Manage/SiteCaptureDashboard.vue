@@ -37,9 +37,9 @@
         v-else="scanInProgress"
         @click="startSiteScan"
         class="ma-2"
-        color="primary"
+        color="success"
       >
-        Start Scan
+        Start Site Capture
         <v-icon
           icon="mdi-plus-circle"
           end
@@ -99,13 +99,13 @@
       </tr>
     </tbody>
   </v-table>
-
     </v-col>
   </v-row>
 </template>
 
 <script>
   import apiRoutes from '../../apiRoutes';
+  import md5 from 'crypto-js/md5';
 
   export default {
     props: ['companyID', 'siteID'],
@@ -127,14 +127,20 @@
         const captureResponse = await fetch(request);
 
         const json = await captureResponse.json();
-
-        spec.captured = true;
-        this.scansCompleted = this.scansCompleted + 1;
+        
+        if (!captureResponse.ok) {
+            console.error(`Response status: ${captureResponse.status}`);
+        } else {
+          spec.captured = true;
+          this.scansCompleted = this.scansCompleted + 1;
+        }
 
       },
       startSiteScan: async function() {
 
         this.scanInProgress = true;
+
+        this.pageLoadTime = Date.now();
 
         const completed = this.sitePageSpecs.map(async (spec) => {
           await this.captureReq(spec)
@@ -155,7 +161,8 @@
           const json = await response.json();
           const sites = json.sites[0]
           const sitePageSpecs = [];
-
+          const gid = this.groupID;
+          
           const pages = sites.pages.map((page) => {
             page.capturespecs = page.capturespecs.map(
               (spec) => { 
@@ -174,7 +181,8 @@
                   width: spec.width,
                   height: spec.height,
                   browser: spec.browser,
-                  captured: false
+                  captured: false,
+                  groupID: gid
                 });
                 spec.captured = false; 
                 return spec;
@@ -211,11 +219,17 @@
       // scansCompleted() {
       //   return this.sitePageSpecs.reduce((count, spec) => (spec.captured) ? count + 1 : count, 0);
       // },
+      groupID: function() {
+        const urlHashString = `${this.companyID}-${this.siteID}-${this.pageLoadTime}`;
+        const groupID = md5(urlHashString);
+        return groupID.toString();
+      },
       maxScanCount() {
         return this.sitePageSpecs.length;
       }
     },
     data: () => ({
+      pageLoadTime: Date.now(),
       scanInProgress: false,
       scansCompleted: 0,
       sitePageSpecs: [],

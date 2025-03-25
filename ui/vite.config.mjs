@@ -6,14 +6,24 @@ import Layouts from 'vite-plugin-vue-layouts'
 import Vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import sirv from 'sirv';
 
 // Utilities
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
 
+const CaptureFiles = {
+  name: 'serve-capture-files',
+  configureServer(server) {
+      const serverStatic = sirv('../capture', {})
+      server.middlewares.use(serverStatic);
+  }
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    CaptureFiles,
     VueRouter(),
     Layouts(),
     Vue({
