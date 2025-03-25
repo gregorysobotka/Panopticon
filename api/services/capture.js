@@ -1,4 +1,5 @@
 const { chromium } = require("playwright");
+const looksSame = require('looks-same');
 const crypto = require('node:crypto');
 
 /*
@@ -6,8 +7,8 @@ const crypto = require('node:crypto');
     the liklihood of there ever being a naming collision. 
 */
 
-function captureHash(url){
-    const urlHashString = `${url}${Date.now()}`;
+function captureHash(strVal){
+    const urlHashString = `${strVal}${Date.now()}`;
     return crypto.createHash('md5').update(urlHashString).digest('hex').toString();
 }
 
@@ -25,6 +26,7 @@ async function screenCapture(captureObject) {
     const browser = await chromium.launch();
     const context = await browser.newContext();
     const page = await context.newPage();
+    await page.setDefaultTimeout(120000)
     await page.setViewportSize({ width: captureObject.width, height: captureObject.height });
     await page.goto(captureObject.fullurl);
     const screenshot = await page.screenshot({ path: captureObject.imageurl, fullPage: false });
@@ -32,6 +34,34 @@ async function screenCapture(captureObject) {
     await browser.close();
     return screenshot;
 };
+
+async function compareCaptures(versionOne, versionTwo){
+
+    const imagesBasePath = '../capture/';
+    const imagesDiffPath = '../capture/diff/';
+
+    const imageOne = `${imagesBasePath}${versionOne}`;
+    const imageTwo = `${imagesBasePath}${versionTwo}`;
+
+    const hashStringVal = `compare-${Date.now()}`;
+    const diffFileName = captureHash(hashStringVal);
+    const diffImage = `${imagesDiffPath}${diffFileName}.png`;
+
+    const diffedImages = await looksSame.createDiff({
+        reference: imageOne,
+        current: imageTwo,
+        // diff: diffImage,
+        highlightColor: '#ff00ff', // color to highlight the differences
+        strict: false, // strict comparsion
+        tolerance: 2.5,
+        antialiasingTolerance: 0,
+        ignoreAntialiasing: true, // ignore antialising by default
+        ignoreCaret: true // ignore caret by default
+    });
+
+    return diffedImages;
+}
+
 
 // Accepts joined DB Company, Site, Page, Spec Model and produces single object for PageCapture creation  
 function captureObj(allSitePageSpecs) {
@@ -80,4 +110,4 @@ function captureObj(allSitePageSpecs) {
     }
 }
 
-module.exports = { screenCapture, captureObj };
+module.exports = { screenCapture, captureObj, compareCaptures };

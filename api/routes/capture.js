@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { Company, Site, Page, CaptureSpecs, PageCapture } = require('../models/db');
-const { screenCapture, captureObj } = require('../services/capture.js');
+const { screenCapture, captureObj, compareCaptures } = require('../services/capture.js');
 
 /* GET capture */
 router.get('/', async function(req, res, next) {
@@ -20,6 +20,21 @@ router.post('/', async function(req, res, next) {
         const specObject = { displayname, description, width, height, delay, browser };
         const createSpec = await CaptureSpecs.create(specObject);
         res.send(createSpec.toJSON());
+    } catch(e) {
+        console.error(e)
+        res.status(400).send({ "status": "error", "message": "error handling request" });
+    }
+});
+
+router.get('/image/diff/:imageOne/:imageTwo', async function(req, res, next) {
+    try {
+        
+        const { imageOne, imageTwo } = req.params;
+
+        const result = await compareCaptures(imageOne, imageTwo);
+        res.type('png');
+        res.send(result);
+
     } catch(e) {
         console.error(e)
         res.status(400).send({ "status": "error", "message": "error handling request" });

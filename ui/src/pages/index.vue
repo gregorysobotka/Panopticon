@@ -26,7 +26,7 @@
           icon="mdi-text-box-outline"
         />
         <DashboardCard
-          title="New Scan"
+          title="New Comparison"
           subtitle="Check for changes that have occured to the websites you're monitoring"
           to="compare"
           icon="mdi-text-box-outline"

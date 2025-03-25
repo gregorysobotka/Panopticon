@@ -24,8 +24,6 @@
       />
     </v-col>
     <v-col cols="12" v-if="readyForComp">
-      <!-- <pre>{{selectedBase}}</pre>
-      <pre>{{selectedComp}}</pre> -->
       <v-btn 
         color="primary" 
         @click="startComparison"
@@ -38,29 +36,40 @@
 
   <v-row v-if="activeComparison">
     <v-col cols="4">
-      <p class="text-center bg-grey py-2 mb-2">Version 1</p>
+      <p class="text-center bg-grey-darken-2 py-2 mb-2">Version 1</p>
       <v-row v-for="capture in baseCaptures">
         <v-col>
+          <p class="text-center bg-grey-lighten-2 py-2 mb-2">{{capture.pagename}}</p>
           <v-img :src="getImageURL(capture.filename)" />
         </v-col>
       </v-row>
     </v-col>
     <v-col cols="4">
-      <p class="text-center bg-grey py-2 mb-2">Version 2</p>
+      <p class="text-center bg-grey-darken-2 py-2 mb-2">Version 2</p>
       <v-row v-for="capture in compCaptures">
         <v-col>
+          <p class="text-center bg-grey-lighten-2 py-2 mb-2">{{capture.pagename}}</p>
           <v-img :src="getImageURL(capture.filename)" />
         </v-col>
       </v-row>
     </v-col>
     <v-col cols="4">
       <p class="text-center bg-grey py-2 mb-2">Difference</p>
+      <!-- Temporary solution, need to refactor entire component to organize grouping of captures-->
+       <v-row v-for="imgurl in combinedGroupCaptures">
+        <v-col>
+          <p class="text-center bg-grey-lighten-2 py-2 mb-2">DIFF</p>
+          <v-img :src="imgurl" />
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
 </template>
 
 <script>
   import apiRoutes from '../../apiRoutes';
+
+  import md5 from 'crypto-js/md5';
   
   // temporary only -- plan to remove date-format
   import dateFormat from 'date-format';
@@ -118,13 +127,47 @@
 
         const selectedBase = this.selectedBase;
         const selectedComp = this.selectedComp;
+        const combinedGroups = `${selectedBase}${selectedComp}`;
 
-        console.log(selectedBase, selectedComp)
+        const combinedGroupID = md5(combinedGroups).toString();
+
         const baseCaptures = await this.getGroupedCaptures(selectedBase);
         const compCaptures = await this.getGroupedCaptures(selectedComp);
 
         this.baseCaptures = baseCaptures;
         this.compCaptures = compCaptures;
+        this.combinedGroupID = combinedGroupID;
+
+        this.compareCaptures(combinedGroupID, baseCaptures, compCaptures);
+
+        
+
+      },
+
+      compareCaptures: async function(cgid, baseCaptures, compCaptures) {
+        
+        // THIS WILL BE COMPLETELY RE-WRITTEN
+
+        const sharedHash = {};
+
+        baseCaptures.forEach((capture) => {
+          const uid = `s${capture.siteid}-p${capture.pageid}-w${capture.width}-h${capture.height}`;
+          capture.uid = uid;
+          sharedHash[uid] = { base: capture.filename, comp: ''};
+        });
+
+        compCaptures.forEach((capture) => {
+          const uid = `s${capture.siteid}-p${capture.pageid}-w${capture.width}-h${capture.height}`;
+          capture.uid = uid;
+          sharedHash[uid].comp = capture.filename;
+        });
+
+        Object.keys(sharedHash).forEach((key) => {
+          const baseimg = sharedHash[key].base;
+          const compimg = sharedHash[key].comp;
+          const combinedImages = `/api/capture/image/diff/${baseimg}/${compimg}`;
+          this.combinedGroupCaptures.push(combinedImages);
+        });
 
       },
       getGroupedCaptures: async function(groupID) {
@@ -134,8 +177,6 @@
         try {
           const response = await fetch(captureURL);
           const json = await response.json();
-
-          console.log(json)
 
           return json;
 
@@ -200,6 +241,8 @@
       }
     },
     data: () => ({
+      combinedGroupCaptures: [],
+      combinedGroupID: '',
       activeComparison: false,
       imgpath: '../../../../capture/',
       compCaptures: [],

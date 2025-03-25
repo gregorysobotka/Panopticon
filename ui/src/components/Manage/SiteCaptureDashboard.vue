@@ -127,9 +127,13 @@
         const captureResponse = await fetch(request);
 
         const json = await captureResponse.json();
-
-        spec.captured = true;
-        this.scansCompleted = this.scansCompleted + 1;
+        
+        if (!captureResponse.ok) {
+            console.error(`Response status: ${captureResponse.status}`);
+        } else {
+          spec.captured = true;
+          this.scansCompleted = this.scansCompleted + 1;
+        }
 
       },
       startSiteScan: async function() {
