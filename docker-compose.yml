@@ -1,0 +1,23 @@
+services:
+  imgs:
+    image: nginx:1-alpine
+    ports:
+      - 8888:80
+    volumes:
+      - ./capture/:/usr/share/nginx/html
+  # ui:
+  #   build: ./ui
+  #   environment:
+  #     - NODE_ENV=development
+  #   ports:
+  #     - "4444:80"
+  # api:
+  #   build: ./api
+  #   environment:
+  #     - NODE_ENV=development
+  #   volumes:
+  #     - type: bind
+  #       source: api/database.sqlite
+  #       target: /opt/app/database.sqlite
+  #   ports:
+  #     - "5555:3300"
