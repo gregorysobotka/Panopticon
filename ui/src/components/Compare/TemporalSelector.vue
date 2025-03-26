@@ -44,13 +44,11 @@
 
     <v-col cols="4">
       <p class="text-center bg-grey-darken-2 py-2 mb-2">V2</p>
-      <!-- <p class="text-center bg-grey-lighten-2 py-2 mb-2">{{capture.comp.pagename}}</p> -->
       <v-img :src="getImageURL(capture.comp.filename)" />
     </v-col>
 
     <v-col cols="4">
       <p class="text-center bg-grey-darken-2 py-2 mb-2">Diff</p>
-      <!-- Temporary solution, need to refactor entire component to organize grouping of captures-->
       <v-img :src="deltaImage(capture.base.filename, capture.comp.filename)" />
     </v-col>
   </v-row>
@@ -60,6 +58,8 @@
   import apiRoutes from '../../apiRoutes';
 
   import md5 from 'crypto-js/md5';
+
+  const staticFileURL = 'http://localhost:8888';
   
   // temporary only -- plan to remove date-format
   import dateFormat from 'date-format';
@@ -82,7 +82,7 @@
     watch: {},
     methods: {
       getImageURL(filename) {
-        const baseURL = 'http://localhost:3000';
+        const baseURL = staticFileURL;
         return `${baseURL}/${filename}`;
       },
       readableDate: function (date) {
