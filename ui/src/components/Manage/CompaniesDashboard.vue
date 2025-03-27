@@ -76,7 +76,7 @@
             v-for="company in companies"
             :key="company.displayname"
           >
-            <td><v-btn variant="flat" color="" :to="companyLink(company.id)">{{ company.displayname }}</v-btn></td>
+            <td><router-link class="text-decoration-none text-h6 text-blue" :to="companyLink(company.id)">{{ company.displayname }}</router-link></td>
             <td>{{ company.createdAt }}</td>
             <td>{{ company.updatedAt }}</td>
           </tr>

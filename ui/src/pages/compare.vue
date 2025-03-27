@@ -2,18 +2,23 @@
   <v-container>
     <v-responsive
       class="align-centerfill-height mx-auto"
-      max-width="1200"
+      max-width="2200"
     >
-      <router-link to="/">
-        <v-img
-          class="mb-4"
-          height="150"
-          src="@/assets/logo.png"
-          to="/"
-        />
-      </router-link>
+      <v-row class="pa-0">
+        <v-col>
+          <router-link to="/">
+            <v-img
+              class="mb-4"
+              height="50"
+              src="@/assets/logo.png"
+              to="/" 
+            />
+          </router-link>
+        </v-col>
+      </v-row>
 
       <router-view />
+
     </v-responsive>
   </v-container>
 </template>

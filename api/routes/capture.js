@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { Company, Site, Page, CaptureSpecs, PageCapture } = require('../models/db');
+const { Company, Site, Page, CaptureSpecs, PageCapture, ComparisonHistory } = require('../models/db');
 const { screenCapture, captureObj, compareCaptures } = require('../services/capture.js');
 
 /* GET capture */
@@ -20,6 +20,58 @@ router.post('/', async function(req, res, next) {
         const specObject = { displayname, description, width, height, delay, browser };
         const createSpec = await CaptureSpecs.create(specObject);
         res.send(createSpec.toJSON());
+    } catch(e) {
+        console.error(e)
+        res.status(400).send({ "status": "error", "message": "error handling request" });
+    }
+});
+
+router.get('/compare/history', async function(req, res, next) {
+
+    try {
+
+        const comparisonHistory = await ComparisonHistory.findAll({
+        
+        });
+    
+
+        res.send(comparisonHistory);
+
+    } catch(e) {
+        console.error(e)
+        res.status(400).send({ "status": "error", "message": "error handling request" });
+    }
+});
+
+router.post('/compare/history', async function(req, res, next) {
+
+    try {
+
+        const {
+            companyid,
+            siteid,
+            companyname,
+            sitename,
+            basegroupid,
+            compgroupid,
+            basecapturetime, 
+            compcapturetime,
+        } = req.body;
+
+        const allCompanySitePageCaptures = await ComparisonHistory.create({
+            companyid,
+            siteid,
+            companyname,
+            sitename,
+            basegroupid,
+            compgroupid,
+            basecapturetime, 
+            compcapturetime,
+        });
+    
+
+        res.send(allCompanySitePageCaptures);
+
     } catch(e) {
         console.error(e)
         res.status(400).send({ "status": "error", "message": "error handling request" });

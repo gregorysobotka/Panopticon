@@ -121,7 +121,7 @@
         v-for="page in pages"
         :key="page.name"
       >
-        <td><v-btn variant="flat" color="" :to="pageLink(companyID, siteID, page.id)">{{ page.displayname }}</v-btn></td>
+        <td><router-link class="text-decoration-none text-h6 text-blue" :to="pageLink(companyID, siteID, page.id)">{{ page.displayname }}</router-link></td>
         <td>{{ page.createdAt }}</td>
         <td>{{ page.updatedAt }}</td>
         <td><v-icon icon="mdi-history" @click="" start disabled/></td>

@@ -53,30 +53,7 @@
       }
     },
     methods: {
-
-      // getAvailableCaptures: async function(siteID) {
-        
-      //   const companyID = this.selectedCompany;
-      //   const requestURL = apiRoutes.getAvailableCaptures(companyID, siteID);
-
-      //   try {
-      //     const response = await fetch(requestURL);
-      //     if (!response.ok) {
-      //       console.error(`Response status: ${response.status}`);
-      //     }
-      //     const json = await response.json();
-      //     console.log(json)
-      //     const modifiedCaptures = json.map((capture) => {
-      //       capture.readableDate = this.readableDate(capture.createdAt);
-      //       return capture;
-      //     });
-      //     this.captureHistory = modifiedCaptures;
-
-      //   } catch (error) {
-      //     console.error(error.message);
-      //   }
-        
-      // },
+  
       getAllSites: async function(companyID) {
         
         const requestURL = apiRoutes.getAllSites(companyID);
