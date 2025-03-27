@@ -5,12 +5,15 @@ services:
       - 8888:80
     volumes:
       - ./capture/:/usr/share/nginx/html
-  # ui:
-  #   build: ./ui
-  #   environment:
-  #     - NODE_ENV=development
-  #   ports:
-  #     - "4444:80"
+  ui:
+    build: ./ui/.
+    ports:
+      - "6600:3000"
+    volumes:
+      - .:/ui
+      - /ui/node_modules
+    stdin_open: true
+    tty: true
   # api:
   #   build: ./api
   #   environment:

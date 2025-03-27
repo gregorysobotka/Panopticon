@@ -147,6 +147,20 @@ const PageCaptureResult = sequelize.define('pagecaptureresult', {
   imageurl: DataTypes.TEXT,
 });
 
+const ComparisonHistory = sequelize.define('comparisonhistory', {
+  companyid: DataTypes.INTEGER,
+  siteid: DataTypes.INTEGER,
+  companyname: DataTypes.TEXT,
+  sitename: DataTypes.TEXT,
+  basegroupid: DataTypes.TEXT,
+  compgroupid: DataTypes.TEXT,
+  location: DataTypes.TEXT,
+  language: DataTypes.TEXT,
+  environment: DataTypes.TEXT,
+  basecapturetime: DataTypes.TEXT, 
+  compcapturetime: DataTypes.TEXT
+});
+
 const PageCaptureDiffs = sequelize.define('pagecapturediffs', {
   pcid: {
     type: DataTypes.INTEGER,
@@ -195,5 +209,6 @@ module.exports = {
   Page,
   CaptureSpecs,
   PageCapture,
-  PageCaptureResult
+  PageCaptureResult,
+  ComparisonHistory
 };

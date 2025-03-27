@@ -19,6 +19,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '../pages/index.vue'),
       },
       {
+        path: '/history',
+        name: 'History',
+        component: () => import(/* webpackChunkName: "home" */ '../pages/history.vue'),
+      },
+      {
         path: '/compare',
         name: 'Compare',
         component: () => import(/* webpackChunkName: "manage" */ '../pages/compare.vue'),
@@ -27,6 +32,11 @@ const routes = [
             path: 'companies/:companyID/sites/:siteID',
             name: 'TemporalSelector',
             component: () => import(/* webpackChunkName: "manage" */ '../components/Compare/TemporalSelector.vue'),
+          },
+          {
+            path: 'companies/:companyID/sites/:siteID/versions/:selectedBase/:selectedComp',
+            name: 'CompareResults',
+            component: () => import(/* webpackChunkName: "manage" */ '../components/Compare/CompareResults.vue'),
           },
           {
             path: '',

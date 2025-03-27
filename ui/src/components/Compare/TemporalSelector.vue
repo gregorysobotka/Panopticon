@@ -25,33 +25,15 @@
     </v-col>
     <v-col cols="12" v-if="readyForComp">
       <v-btn 
-        color="primary" 
-        @click="startComparison"
+        color="primary"
+        @click="trackComparison"
         block
       > 
         Start Comparison
       </v-btn>
     </v-col>
   </v-row>
-  <v-row v-for="capture in combinedGroupCapturesRef" v-if="activeComparison" class="my-5">
-    <v-col cols="12" class="pa-0 ma-0"> 
-      <p class="text-center bg-black py-1 mb-0 text-h6">PAGE [ {{capture.base.pagename}} ] - {{capture.base.width}}px x {{capture.base.height}}px - language:{{capture.base.language}} - environment: {{capture.base.environment}}</p>
-    </v-col>
-    <v-col cols="4">
-      <p class="text-center bg-grey-darken-2 py-2 mb-2">V1</p>
-      <v-img :src="getImageURL(capture.base.filename)" />
-    </v-col>
 
-    <v-col cols="4">
-      <p class="text-center bg-grey-darken-2 py-2 mb-2">V2</p>
-      <v-img :src="getImageURL(capture.comp.filename)" />
-    </v-col>
-
-    <v-col cols="4">
-      <p class="text-center bg-grey-darken-2 py-2 mb-2">Diff</p>
-      <v-img :src="deltaImage(capture.base.filename, capture.comp.filename)" />
-    </v-col>
-  </v-row>
 </template>
 
 <script>
@@ -111,65 +93,35 @@
         }
         
       },
-      startComparison: async function() {
-
-        this.activeComparison = true; 
-
-        const selectedBase = this.selectedBase;
-        const selectedComp = this.selectedComp;
-        const combinedGroups = `${selectedBase}${selectedComp}`;
-
-        const combinedGroupID = md5(combinedGroups).toString();
-
-        const baseCaptures = await this.getGroupedCaptures(selectedBase);
-        const compCaptures = await this.getGroupedCaptures(selectedComp);
-
-        this.baseCaptures = baseCaptures;
-        this.compCaptures = compCaptures;
-        this.combinedGroupID = combinedGroupID;
-
-        const shareHashRef = {};
-
-        baseCaptures.forEach((capture) => {
-          const uid = `s${capture.siteid}-p${capture.pageid}-w${capture.width}-h${capture.height}`;
-          capture.uid = uid;
-          shareHashRef[uid] = { base: capture, comp: {}};
-        });
-
-        compCaptures.forEach((capture) => {
-          const uid = `s${capture.siteid}-p${capture.pageid}-w${capture.width}-h${capture.height}`;
-          capture.uid = uid;
-          shareHashRef[uid].comp = capture;
-        });
-
-        const combinedList = [];
-
-        Object.keys(shareHashRef).forEach((key) => {
-          combinedList.push(shareHashRef[key]);
-        });
-
-        this.combinedGroupCapturesRef = combinedList
-
-      },
-
-      deltaImage(v1, v2){
-        return `/api/capture/image/diff/${v1}/${v2}`;
-      },
-      getGroupedCaptures: async function(groupID) {
-
-        const captureURL = `/api/capture/history/${groupID}`;
-
-        try {
-          const response = await fetch(captureURL);
-          const json = await response.json();
-
-          return json;
-
-        } catch (error) {
-          console.error(error.message);
-          return ['err'];
-        }
+      trackComparison: async function() { 
         
+        const compHistoryURL = apiRoutes.createCompHistory();
+
+        const baseCapture = this.baseCaptures[0];
+        const compCapture = this.compCaptures[0];
+
+        const comparisonHistoryObject = {
+            companyid: this.companyID,
+            siteid: this.siteID,
+            companyname: this.activeCompanyName,
+            sitename: this.activeSiteName,
+            basegroupid: this.selectedBase,
+            compgroupid: this.selectedComp,
+        };
+
+        const request = new Request(compHistoryURL, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(comparisonHistoryObject)
+        });
+
+          const createCompHistoryEvent = await fetch(request);
+
+          const comparisonResultsLink = `/compare/companies/${this.companyID}/sites/${this.siteID}/versions/${this.selectedBase}/${this.selectedComp}`;
+
+          this.$router.push(comparisonResultsLink);
+
+          
       },
       getAllSites: async function(companyID) {
         
