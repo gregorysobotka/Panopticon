@@ -6,21 +6,28 @@ services:
     volumes:
       - ./capture/:/usr/share/nginx/html
   ui:
-    build: ./ui/.
+    build: ./ui
     ports:
-      - "6600:3000"
+      - "3000:3000"
     volumes:
       - .:/ui
-      - /ui/node_modules
+      # - ./ui/node_modules:/app/node_modules
     stdin_open: true
     tty: true
-  # api:
-  #   build: ./api
-  #   environment:
-  #     - NODE_ENV=development
-  #   volumes:
-  #     - type: bind
-  #       source: api/database.sqlite
-  #       target: /opt/app/database.sqlite
-  #   ports:
-  #     - "5555:3300"
+    depends_on:
+      - api
+    environment:
+      - VITE_API_URL=http://localhost:3300
+  api:
+    build: ./api
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - type: bind
+        source: api/database.sqlite
+        target: /opt/app/database.sqlite
+      - type: bind
+        source: ./capture
+        target: /opt/capture  
+    ports:
+      - "3300:3300"

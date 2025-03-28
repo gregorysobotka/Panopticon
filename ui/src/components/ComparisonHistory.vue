@@ -17,7 +17,8 @@
   <script>
     
     // temporary only -- plan to remove date-format
-    import dateFormat from 'date-format';
+    // import dateFormat from 'date-format';
+    import apiRoutes from '../apiRoutes'; 
   
     export default {
   
@@ -31,7 +32,7 @@
       methods: {
         getHistory: async function(groupID) {
   
-          const captureURL = `/api/capture/compare/history`;
+          const captureURL = apiRoutes.getCompHistory();
   
           try {
             const response = await fetch(captureURL);

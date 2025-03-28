@@ -24,18 +24,17 @@
 </template>
 
 <script>
-    
-    export default {
-        beforeMount: function(){
+  export default {
+      beforeMount: function(){
 
-        },  
-        data: () => ({
+      },  
+      data: () => ({
 
-        }),
-        methods: {
-        
-        }
-    }
+      }),
+      methods: {
+      
+      }
+  }
 
 </script>
 

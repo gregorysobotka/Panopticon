@@ -86,18 +86,18 @@
 
         Object.keys(shareHashRef).forEach((key) => {
           combinedList.push(shareHashRef[key]);
-        });
+        }); 
 
         this.combinedGroupCapturesRef = combinedList
 
       },
 
       deltaImage: function(v1, v2) {
-        return `/api/capture/image/diff/${v1}/${v2}`;
+        return apiRoutes.getImageDiff(v1, v2);
       },
       getGroupedCaptures: async function(groupID) {
 
-        const captureURL = `/api/capture/history/${groupID}`;
+        const captureURL = apiRoutes.getCaptureHistory(groupID);
 
         try {
           const response = await fetch(captureURL);

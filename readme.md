@@ -2,6 +2,13 @@
 - Docker, Docker Compose
 - Node V22*
 
+### To start (using docker)
+[Download Docker Desktop](https://www.docker.com/products/docker-desktop/)
+```
+docker compose up       // attached
+docker compose up -d    // detached
+```
+
 ### To start API
 ```
 cd api
@@ -29,9 +36,11 @@ docker compose up imgs -d (detached)
 ```
 
 ### Plans
-1. Containerizing all apps, running all apps locally will be as easy as `docker compose up`
+1. Completing missing CRUD requests, specifically Update and Delete
 2. Moving image diff from primary API to seperate service
 3. Export / Import for all configurations
 4. Inserting default capture sizes when a page is created
-5. Completing missing CRUD requests, specifically Update and Delete
-6. History app section which will show a full list previous comparisons that have been run
+
+### Completed
+1. Containerizing all apps, running all apps locally will be as easy as `docker compose up`
+2. History app section which will show a full list previous comparisons that have been run
