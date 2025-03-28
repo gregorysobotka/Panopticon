@@ -18,7 +18,7 @@
     
     // temporary only -- plan to remove date-format
     // import dateFormat from 'date-format';
-    import apiRoutes from '../apiRoutes'; 
+    import apiRoutes from '../apiRoutes';
   
     export default {
   

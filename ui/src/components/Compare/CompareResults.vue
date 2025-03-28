@@ -86,7 +86,7 @@
 
         Object.keys(shareHashRef).forEach((key) => {
           combinedList.push(shareHashRef[key]);
-        }); 
+        });
 
         this.combinedGroupCapturesRef = combinedList
 

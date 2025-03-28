@@ -12,7 +12,6 @@ import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
 
 // const proxyURL = ( import.meta.env.VITE_API_URL ) ? import.meta.env.VITE_API_URL : 'http://localhost:3300/';
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
