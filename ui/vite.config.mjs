@@ -11,6 +11,7 @@ import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
 
+// const proxyURL = ( import.meta.env.VITE_API_URL ) ? import.meta.env.VITE_API_URL : 'http://localhost:3300/';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -64,12 +65,12 @@ export default defineConfig({
   server: {
     host: true,
     port: 3000,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3300/',
-        rewrite: (path) => path.replace(/^\/api/, '')
-      } 
-    }
+    // proxy: {
+    //   '/api': {
+    //     target: proxyURL,
+    //     rewrite: (path) => path.replace(/^\/api/, '')
+    //   } 
+    // }
   },
   css: {
     preprocessorOptions: {

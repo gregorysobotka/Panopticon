@@ -106,7 +106,9 @@
           });
 
           const createCompany = await fetch(request);
+          
           this.getCompanies();
+          
           this.createDisplayname = '';
 
         } catch (error) {
