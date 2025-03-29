@@ -37,10 +37,6 @@
 
 <script>
   import apiRoutes from '../../apiRoutes';
-
-  import md5 from 'crypto-js/md5';
-
-  const staticFileURL = 'http://localhost:8888';
   
   // temporary only -- plan to remove date-format
   import dateFormat from 'date-format';
@@ -62,10 +58,6 @@
     },
     watch: {},
     methods: {
-      getImageURL(filename) {
-        const baseURL = staticFileURL;
-        return `${baseURL}/${filename}`;
-      },
       readableDate: function (date) {
         const parsedDate = dateFormat.parse(dateFormat.ISO8601_WITH_TZ_OFFSET_FORMAT, date);
         return parsedDate.toString();

@@ -47,7 +47,10 @@ export default defineConfig({
       vueTemplate: true,
     }),
   ],
-  define: { 'process.env': {} },
+  define: { 'process.env': {
+    API_URL: 'http://localhost:3000',
+    ASSETS_URL: 'http://localhost:3301' 
+  } },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
