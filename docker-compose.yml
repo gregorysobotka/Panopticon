@@ -22,12 +22,28 @@ services:
     build: ./api
     environment:
       - NODE_ENV=development
+      - DB_ENGINE=sqlite
+      # - DB_ENGINE=postgres
+      - SQLITE_FILE=database.sqlite
+      - DB_HOST=postgresdb
+      - DB_USER=devuser
+      - DB_NAME=pandb
+      - DB_PASSWORD=development
     volumes:
       - type: bind
         source: api/database.sqlite
         target: /opt/app/database.sqlite
       - type: bind
         source: ./capture
-        target: /opt/capture  
+        target: /opt/capture
     ports:
       - "3300:3300"
+  postgresdb:
+    image: postgres:17.4
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=development
+      - POSTGRES_USER=devuser
+      - POSTGRES_DB=pandb

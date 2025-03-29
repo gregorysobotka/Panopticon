@@ -1,19 +1,29 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: './database.sqlite'
-});
+const DB_ENGINE = process.env.DB_ENGINE || 'sqlite';
+const sequelizeConfig = { dialect: '' };
 
-/*
-Production:
+let dbUser = null;
+let dbPass = null;
+let dbName = null;
 
-    const sequelize = new Sequelize('database', 'username', 'password', {
-      host: 'localhost',
-      dialect: 'postgres'
-    });
+if(DB_ENGINE == 'postgres') {
+  // configure sequelize object for postgres
+  dbUser = process.env.DB_USER;
+  dbPass = process.env.DB_PASSWORD;
+  dbName = process.env.DB_NAME;
 
-*/
+  sequelizeConfig.dialect = 'postgres';
+  sequelizeConfig.host = process.env.DB_HOST;
+
+} else {
+  // configure sequelize object for sqlite
+  sequelizeConfig.dialect = 'sqlite';
+  sequelizeConfig.storage = './database.sqlite';
+
+} 
+
+const sequelize = new Sequelize(dbName, dbUser, dbPass, sequelizeConfig);
 
 const Company = sequelize.define('company', {
   displayname: {
