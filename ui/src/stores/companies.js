@@ -46,8 +46,8 @@ export const useCompanies = defineStore('companies', {
           }
           const json = await response.json();
 
-          json.forEach((site) => {
-            site.companyRoute = `/manage/companies/${site.id}`;
+          json.forEach((company) => {
+            company.companyRoute = `/manage/companies/${company.id}`;
           });
 
           this.companies = json;
@@ -72,10 +72,10 @@ export const useCompanies = defineStore('companies', {
             });
 
             const res = await fetch(request);
-            const addNewCompany = await res.json();
+            const json = await res.json();
 
             this.newCompany.displayname = '';
-            this.companies.push(addNewCompany);
+            this.companies.push(json);
             
         } catch (error) {
             console.error(error.message);
