@@ -76,7 +76,7 @@
             v-for="company in companies"
             :key="company.displayname"
           >
-            <td><router-link class="text-decoration-none text-h6 text-blue" :to="companyLink(company.id)">{{ company.displayname }}</router-link></td>
+            <td><router-link class="text-decoration-none text-h6 text-blue" :to="company.companyRoute">{{ company.displayname }}</router-link></td>
             <td>{{ company.createdAt }}</td>
             <td>{{ company.updatedAt }}</td>
           </tr>
@@ -95,11 +95,10 @@
       this.getCompanies();
     },
     computed: {
-      ...mapWritableState(useCompanies, ['newCompany', 'addCompanyActive', 'companies']),
+      ...mapWritableState(useCompanies, ['newCompany', 'addCompanyActive', 'companies', 'companyID']),
       ...mapState(useCompanies, ['companies']),
     },
     methods: {
-      companyLink: (companyID) => `/manage/companies/${companyID}`,
       ...mapActions(useCompanies, ['getCompanies', 'addCompany']),
       addCompanyReq: async function(){
         this.addCompany(this.newCompany);

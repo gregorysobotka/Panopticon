@@ -1,10 +1,19 @@
 import { defineStore } from 'pinia';
 import apiRoutes from '@/apiRoutes';
 
+/*
+
+    Company Object:
+
+    {
+    
+    }
+
+*/
+
 export const useCompanies = defineStore('companies', {
   state: () => ({
-    /** @type {{ }} */
-    company: {},
+    companyID: 0, // active / selected company
     companies: [],
     addCompanyActive: false,
     newCompany: {
@@ -16,15 +25,17 @@ export const useCompanies = defineStore('companies', {
       return state.companies;
     },
     activeCompany(state) {
-        return state.company;
-    },
-    companyID(state) {
-        return this.company.id;
+    // active company requires that companyID has been updated using action OR mapWritableState
+        if(state.companyID == 0){ 
+            return {};
+        } else {
+            return state.companies.filter((company) => company.id != state.companyID);
+        }
     }
   },
   actions: {
     selectCompany(companyID) {
-      this.company = this.companies[0]; // todo
+      this.companyID = companyID;
     },
     async getCompanies(){
         const companyURL = apiRoutes.getCompanies();
@@ -34,6 +45,11 @@ export const useCompanies = defineStore('companies', {
             console.error(`Response status: ${response.status}`);
           }
           const json = await response.json();
+
+          json.forEach((site) => {
+            site.companyRoute = `/manage/companies/${site.id}`;
+          });
+
           this.companies = json;
 
         } catch (error) {
@@ -61,10 +77,9 @@ export const useCompanies = defineStore('companies', {
             this.newCompany.displayname = '';
             this.companies.push(addNewCompany);
             
-          } catch (error) {
+        } catch (error) {
             console.error(error.message);
-          }
-        
+        }
     }
   },
 })
