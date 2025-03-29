@@ -9,8 +9,6 @@ const API_ROUTES = {
     getAllSitePages: (companyID, siteID) => `${API_URL}/companies/${companyID}/sites/${siteID}/pages`,
     getPageSpecs: (companyID, siteID, pageID) => `${API_URL}/companies/${companyID}/sites/${siteID}/pages/${pageID}/specs`,
     getAvailableCaptures: (companyID, siteID) => `${API_URL}/capture/companies/${companyID}/sites/${siteID}/history`,
-    
-    getImageDiff: (v1, v2) => `${API_URL}/capture/image/diff/${v1}/${v2}`,
     getCaptureHistory: (groupID) => `${API_URL}/capture/history/${groupID}`,
 
     createNewCompany: () => `${API_URL}/companies`,

@@ -1,87 +1,43 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: './database.sqlite'
-});
+const { CompanyModel } = require('./CompanyModel');
+const { SiteModel } = require('./SiteModel');
+const { PageModel } = require('./PageModel');
+const { CaptureSpecsModel } = require('./CaptureSpecsModel');
+const { PageCaptureModel } = require('./PageCaptureModel');
+const { PageCaptureResultModel } = require('./PageCaptureResultModel');
+const { ComparisonHistoryModel } = require('./ComparisonHistoryModel');
 
-/*
-Production:
 
-    const sequelize = new Sequelize('database', 'username', 'password', {
-      host: 'localhost',
-      dialect: 'postgres'
-    });
+const DB_ENGINE = process.env.DB_ENGINE || 'sqlite';
+const sequelizeConfig = { dialect: '' };
 
-*/
+let dbUser = null;
+let dbPass = null;
+let dbName = null;
 
-const Company = sequelize.define('company', {
-  displayname: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
-  active: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true,
-  }
-});
+if(DB_ENGINE == 'postgres') {
+  // configure sequelize object for postgres
+  dbUser = process.env.DB_USER;
+  dbPass = process.env.DB_PASSWORD;
+  dbName = process.env.DB_NAME;
+  sequelizeConfig.dialect = 'postgres';
+  sequelizeConfig.host = process.env.DB_HOST;
+} else {
+  // configure sequelize object for sqlite
+  sequelizeConfig.dialect = 'sqlite';
+  sequelizeConfig.storage = './database.sqlite';
+} 
 
-const Site = sequelize.define('site', {
-  displayname: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
-  url: DataTypes.TEXT,
-  location: DataTypes.TEXT,
-  language: DataTypes.TEXT,
-  environment: DataTypes.TEXT,
-  active: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true,
-  }
-});
+const sequelize = new Sequelize(dbName, dbUser, dbPass, sequelizeConfig);
 
-const Page = sequelize.define('page', {
-  displayname: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
-  path: DataTypes.TEXT,
-  active: {
-    type: DataTypes.BOOLEAN,
-
-    defaultValue: true,
-  }
-});
-
-const CaptureSpecs = sequelize.define('capturespecs', {
-  displayname: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
-  width: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  
-  },
-  height: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  delay: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-  },
-  browser: {
-    type: DataTypes.TEXT,
-    defaultValue: 'firefox',
-  },
-  displayname: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
-  description: DataTypes.TEXT
-});
+const Company = sequelize.define('company', CompanyModel);
+const Site = sequelize.define('site', SiteModel);
+const Page = sequelize.define('page', PageModel);
+const CaptureSpecs = sequelize.define('capturespecs', CaptureSpecsModel);
+const PageCapture = sequelize.define('pagecapture', PageCaptureModel);
+const PageCaptureResult = sequelize.define('pagecaptureresult', PageCaptureResultModel);
+const ComparisonHistory = sequelize.define('comparisonhistory', ComparisonHistoryModel);
 
 const PageCaptureSpecs = sequelize.define('pagecapturespecs', {
   pid: {
@@ -98,67 +54,6 @@ const PageCaptureSpecs = sequelize.define('pagecapturespecs', {
       key: 'id',
     },
   },
-});
-
-/*
-
-  Decided to not maintain link to company/site/page models.
-
-  Reasons:
-  - Wanted to treat results as unique, separate data
-  - Focus on getting MVP running
-
-*/
-
-const PageCapture = sequelize.define('pagecapture', {
-  groupid: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
-  companyname: DataTypes.TEXT,
-  sitename: DataTypes.TEXT,
-  pagename: DataTypes.TEXT,
-  companyid: DataTypes.INTEGER,
-  siteid: DataTypes.INTEGER,
-  pageid: DataTypes.INTEGER,
-  fullurl: DataTypes.TEXT,
-  filename: DataTypes.TEXT,
-  imageurl: DataTypes.TEXT,
-  location: DataTypes.TEXT,
-  language: DataTypes.TEXT,
-  environment: DataTypes.TEXT,
-  width: DataTypes.INTEGER,
-  height: DataTypes.INTEGER, 
-  delay: DataTypes.INTEGER,
-  year: DataTypes.INTEGER, 
-  month: DataTypes.INTEGER,
-  day: DataTypes.INTEGER,
-  hour: DataTypes.INTEGER,
-  minute: DataTypes.INTEGER
-});
-
-const PageCaptureResult = sequelize.define('pagecaptureresult', {
-  companyname: DataTypes.TEXT,
-  basecaptureid: DataTypes.TEXT,
-  compcaptureid: DataTypes.TEXT,
-  siteid: DataTypes.INTEGER,
-  pageid: DataTypes.INTEGER,
-  fullurl: DataTypes.TEXT,
-  imageurl: DataTypes.TEXT,
-});
-
-const ComparisonHistory = sequelize.define('comparisonhistory', {
-  companyid: DataTypes.INTEGER,
-  siteid: DataTypes.INTEGER,
-  companyname: DataTypes.TEXT,
-  sitename: DataTypes.TEXT,
-  basegroupid: DataTypes.TEXT,
-  compgroupid: DataTypes.TEXT,
-  location: DataTypes.TEXT,
-  language: DataTypes.TEXT,
-  environment: DataTypes.TEXT,
-  basecapturetime: DataTypes.TEXT, 
-  compcapturetime: DataTypes.TEXT
 });
 
 const PageCaptureDiffs = sequelize.define('pagecapturediffs', {

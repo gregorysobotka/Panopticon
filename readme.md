@@ -1,13 +1,28 @@
 ## Requirements
-- Docker, Docker Compose
-- Node V22*
+- Docker
+- Node V22* (UI/API)
 
-### To start (using docker)
+## Nice to haves
+- Docker Compose
+
+### To start (using docker, docker compose)
 [Download Docker Desktop](https://www.docker.com/products/docker-desktop/)
 ```
 docker compose up       // attached
 docker compose up -d    // detached
 ```
+
+#### Images/Containers
+1. imgs: img renderer, serves as a local replacement for AWS S3, Azure blobstore, or server. Opted for this path instead of using a proxy.
+2. ui: vite / vue 3 / vuetify app running in development mode. Traffic is proxied to dev server running in container.
+3. api: node / express
+4. postgresdb: what can I say, it's postgres!
+
+#### Notes
+- You can switch between sqlite and postgres by changing commented out lines in docker compose file.
+- sqlite is great for local development as data persists outside of the container as the sqlite file (database.sqlite) is mounted within the project directory.
+
+## Running locally with minimal docker dependencies
 
 ### To start API
 ```

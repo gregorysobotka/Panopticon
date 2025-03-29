@@ -23,8 +23,7 @@
     export default {
   
       beforeMount: function(){
-  
-  
+
         this.getHistory();
    
       },

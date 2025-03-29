@@ -1,33 +1,58 @@
 services:
-  imgs:
-    image: nginx:1-alpine
-    ports:
-      - 8888:80
+  captures:
+    build: ./capture
+    environment:
+      - NODE_ENV=development
     volumes:
-      - ./capture/:/usr/share/nginx/html
+      - type: bind
+        source: ./capture
+        target: /opt/capture
   ui:
     build: ./ui
     ports:
       - "3000:3000"
     volumes:
       - .:/ui
-      # - ./ui/node_modules:/app/node_modules
+      - ./ui/node_modules:/app/node_modules
     stdin_open: true
     tty: true
     depends_on:
       - api
     environment:
       - VITE_API_URL=http://localhost:3300
+      - VITE_CAPTURES_URL=http://localhost:3301
   api:
     build: ./api
     environment:
       - NODE_ENV=development
+      - DB_ENGINE=sqlite
+      # - DB_ENGINE=postgres
+      - SQLITE_FILE=database.sqlite
+      - DB_HOST=postgresdb
+      - DB_USER=devuser
+      - DB_NAME=pandb
+      - DB_PASSWORD=development
     volumes:
       - type: bind
         source: api/database.sqlite
         target: /opt/app/database.sqlite
       - type: bind
         source: ./capture
-        target: /opt/capture  
+        target: /opt/capture
     ports:
       - "3300:3300"
+  postgresdb:
+    image: postgres:17.4
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=development
+      - POSTGRES_USER=devuser
+      - POSTGRES_DB=pandb
+  # imgs:
+  #   image: nginx:1-alpine
+  #   ports:
+  #     - 8888:80
+  #   volumes:
+  #     - ./capture/:/usr/share/nginx/html
