@@ -54,13 +54,14 @@
     <thead>
       <tr>
         <th class="text-left">Name</th>
+        <th class="text-left">Full URL</th>
+        <th class="text-left">Env</th>
+        <th class="text-left">Lang</th>
+        <th class="text-left">Width</th>
+        <th class="text-left">Height</th>
+        <th class="text-left">Browser</th>
         <th class="text-left"></th>
-        <th class="text-left"></th>
-        <th class="text-left"></th>
-        <th class="text-left"></th>
-        <th class="text-left"></th>
-        <th class="text-left"></th>
-        <th class="text-left"></th>
+        <th class="text-left">Status</th>
       </tr>
     </thead>
     <tbody>
@@ -82,13 +83,7 @@
         <td>{{spec.width}}px</td>
         <td>{{spec.height}}px</td>
         <td>{{spec.browser}}</td>
-        <td>
-          <v-icon
-            color="grey"
-            icon="mdi-circle-small"
-            size="large"
-          />
-        </td>
+        <td></td>
         <td>
           <v-icon
             :color="(spec.captured) ? 'green' : 'grey'"
@@ -216,9 +211,6 @@
           return (this.scansCompleted / this.sitePageSpecs.length) * 100;
         }
       },
-      // scansCompleted() {
-      //   return this.sitePageSpecs.reduce((count, spec) => (spec.captured) ? count + 1 : count, 0);
-      // },
       groupID: function() {
         const urlHashString = `${this.companyID}-${this.siteID}-${this.pageLoadTime}`;
         const groupID = md5(urlHashString);
