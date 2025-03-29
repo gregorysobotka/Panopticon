@@ -5,7 +5,7 @@
     </v-col>
     <v-col cols="2">
       <v-btn
-        @click="addCompany = !addCompany"
+        @click="addCompanyActive = !addCompanyActive"
         class=""
         color="primary"
         flat
@@ -21,7 +21,7 @@
   </v-row>
   
   <!-- add company component (could be split into new component for reuse) -->
-  <v-row v-if="addCompany" class="mt-5">
+  <v-row v-if="addCompanyActive" class="mt-5">
     <v-col cols="12">
       <v-card
         class="mx-auto pt-4 bg-grey-lighten-4"
@@ -34,7 +34,7 @@
           </v-col>
           <v-col cols="12">
             <v-text-field
-              v-model="createDisplayname"
+              v-model="newCompany.displayname"
               required
             ></v-text-field>
           </v-col>
@@ -87,60 +87,26 @@
 </template>
 
 <script>
-  import apiRoutes from '../../apiRoutes';
+  import { mapActions, mapState, mapWritableState } from 'pinia';
+  import { useCompanies } from '@/stores/companies';
 
   export default {
     beforeMount: function(){
       this.getCompanies();
     },
+    computed: {
+      ...mapWritableState(useCompanies, ['newCompany', 'addCompanyActive', 'companies']),
+      ...mapState(useCompanies, ['companies']),
+    },
     methods: {
       companyLink: (companyID) => `/manage/companies/${companyID}`,
-      addCompanyReq: async function() {
-        try {
-          const createNewCompanyURL = apiRoutes.createNewCompany();
-          const companyObject = { 'displayname': this.createDisplayname }; 
-          const request = new Request(createNewCompanyURL, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(companyObject)
-          });
-
-          const createCompany = await fetch(request);
-          
-          this.getCompanies();
-          
-          this.createDisplayname = '';
-
-        } catch (error) {
-          console.error(error.message);
-        }
-      
-      },
-      getCompanies: async function() {
-
-        const companyURL = apiRoutes.getCompanies();
-
-        try {
-          const response = await fetch(companyURL);
-          if (!response.ok) {
-            console.error(`Response status: ${response.status}`);
-          }
-          const json = await response.json();
-          this.companies = json;
-
-        } catch (error) {
-          console.error(error.message);
-        }
-        
+      ...mapActions(useCompanies, ['getCompanies', 'addCompany']),
+      addCompanyReq: async function(){
+        this.addCompany(this.newCompany);
       }
     },
-    computed: {},
     data: () => ({
-      companies: [
-        { name: '', createdAt: '', updatedAt: '' },
-      ],
-      addCompany: false,
-      createDisplayname: ''
+      
     }),
   }
 </script>
