@@ -14,6 +14,7 @@
     "@mdi/font": "7.4.47",
     "crypto-js": "^4.2.0",
     "date-format": "^4.0.14",
+    "debug": "^4.4.0",
     "roboto-fontface": "*",
     "sirv": "^3.0.1",
     "vue": "^3.4.31",

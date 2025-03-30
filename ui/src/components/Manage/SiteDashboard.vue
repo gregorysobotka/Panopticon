@@ -10,7 +10,7 @@
       <h1 class="text-h4">{{ companyname }} ( <span class="text-green">{{ sitename }}</span> )</h1>
     </v-col>
     <v-col cols="2">
-      <v-btn @click="addPage = !addPage" color="primary" flat block>
+      <v-btn @click="addPageActive = !addPageActive" color="primary" flat block>
         <v-icon icon="mdi-plus" start></v-icon>
         Page
       </v-btn>
@@ -37,91 +37,31 @@
     </v-col>
   </v-row>
 
-  <AddPageForm v-if="addPage" :addPageReq :addPageObject />
+  <AddPageForm v-if="addPageActive" :addPage :newPage />
 
   <PagesTable :pages :companyID :siteID />
 
 </template>
 
 <script>
-import apiRoutes from '../../apiRoutes';
+import { mapActions, mapState, mapWritableState } from 'pinia';
+import { usePages } from '@/stores/pages';
 
 export default {
   props: ['companyID', 'siteID'],
   beforeMount: function () {
-    this.getSitePages();
+    this.setCompanyID(this.companyID);
+    this.setSiteID(this.siteID);
+    this.getPages();
   },
   methods: {
-    addPageReq: async function () {
-      try {
-
-        const createNewPageURL = apiRoutes.createNewPage(this.companyID, this.siteID);
-
-        const request = new Request(createNewPageURL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(this.addPageObject)
-        });
-
-        const createdPage = await fetch(request);
-        this.getSitePages();
-
-        // clear model after submission
-        this.addPageObject.displayname = '';
-        this.addPageObject.path = '';
-
-
-      } catch (error) {
-        console.error(error.message);
-      }
-
-    },
-    getSitePages: async function () {
-
-      const { companyID, siteID } = this;
-      const sitePagesURL = apiRoutes.getAllSitePages(companyID, siteID);
-
-      try {
-        const response = await fetch(sitePagesURL);
-        if (!response.ok) {
-          console.error(`Response status: ${response.status}`);
-        }
-        const json = await response.json();
-        const sites = json.sites[0];
-        const pages = sites.pages;
-
-        this.companyname = json.displayname;
-        this.sitename = sites.displayname;
-        this.location = sites.location;
-        this.language = sites.language;
-        this.environment = sites.environment;
-        this.url = sites.url;
-
-        pages.forEach((page) => {
-          page.pageRoute = `/manage/companies/${companyID}/sites/${siteID}/pages/${page.id}`
-        })
-
-        this.pages = pages;
-
-      } catch (error) {
-        console.error(error.message);
-      }
-
-    }
+    ...mapActions(usePages, ['getPages', 'addPage', 'setCompanyID', 'setSiteID']),
   },
-  computed: {},
+  computed: {
+    ...mapWritableState(usePages, ['newPage', 'addPageActive']),
+    ...mapState(usePages, ['pages', 'companyname', 'sitename', 'location', 'language', 'environment', 'url'])
+  },
   data: () => ({
-    addPage: false,
-    companyname: '',
-    sitename: '',
-    url: '',
-    location: '',
-    language: '',
-    environment: '',
-    addPageObject: { displayname: '', path: '' },
-    pages: [
-      { name: '', createdAt: '', updatedAt: '' }
-    ],
   }),
 }
 </script>

@@ -59,10 +59,11 @@ export const useSites = defineStore('sites', {
 
         const res = await fetch(request);
         const json = await res.json();
-        this.sites.push(json);
         
         // reset fields for newSite
         Object.keys(this.newSite).forEach((key) => this.newSite[key] = '')
+
+        this.getSites();
 
       } catch (error) {
         console.error('sites.addSite.err:', error.message);

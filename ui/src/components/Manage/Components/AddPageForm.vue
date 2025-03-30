@@ -13,14 +13,14 @@
           <v-col cols="6">
             <v-text-field
               label="Page Name"
-              v-model="addPageObject.displayname"
+              v-model="newPage.displayname"
               required
             ></v-text-field>
           </v-col>
           <v-col cols="6">
             <v-text-field
               label="Page Relative Path"
-              v-model="addPageObject.path"
+              v-model="newPage.path"
               required
             ></v-text-field>
           </v-col>
@@ -29,7 +29,7 @@
               size="large"
               color="success"
               block
-              @click="addPageReq"
+              @click="addPage"
             >
               Submit
             </v-btn>
@@ -44,7 +44,7 @@
   <script>
   
     export default {
-      props: ['addPageReq', 'addPageObject'],
+      props: ['addPage', 'newPage'],
       beforeMount: function(){},
       computed: {},
       methods: {},
