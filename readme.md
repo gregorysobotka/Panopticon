@@ -22,7 +22,7 @@ docker compose up -d    // detached
 - You can switch between sqlite and postgres by changing commented out lines in docker compose file.
 - sqlite is great for local development as data persists outside of the container as the sqlite file (database.sqlite) is mounted within the project directory.
 
-## Running locally with minimal docker dependencies
+## Running locally without docker
 
 ### To start API
 ```
@@ -33,6 +33,14 @@ npm run nmon (node mon) or npm run start
 
 // API will run on port 3300 by default
 ```
+
+### To start Image Server
+```
+cd ./capture/server
+npm install
+npm run dev (node mon) or npm run start
+
+// API will run on port 3301 by default
 
 ### To start UI
 ```
