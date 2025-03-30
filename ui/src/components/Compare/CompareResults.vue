@@ -18,7 +18,7 @@
 
     <v-col cols="4" class="pa-0">
       <p class="text-center bg-grey-darken-2 py-1 mb-1">Diff</p>
-      <v-img :src="deltaImage(capture.base.filename, capture.comp.filename)" />
+      <v-img :src="capture.imgDelta" />
     </v-col>
   </v-row>
 </template>
@@ -26,6 +26,8 @@
 <script>
   import apiRoutes from '../../apiRoutes';
   const baseURL = process.env.ASSETS_URL;
+  import { mapActions, mapState, mapWritableState } from 'pinia';
+  import { useCompare } from '@/stores/compare';
 
   export default {
 
@@ -33,6 +35,7 @@
 
       this.companyID =  this.$route.params.companyID;
       this.siteID = this.$route.params.siteID;
+      
       this.selectedBase = this.$route.params.selectedBase;
       this.selectedComp = this.$route.params.selectedComp;
 
@@ -41,6 +44,7 @@
     },
     watch: {},
     methods: {
+      ...mapActions(useCompare, ['getGroupCaptures']),
       getImageURL: function(filename) {
         return `${baseURL}/${filename}`;
       },
@@ -49,64 +53,52 @@
         const selectedBase = this.selectedBase;
         const selectedComp = this.selectedComp;
 
-        const baseCaptures = await this.getGroupedCaptures(selectedBase);
-        const compCaptures = await this.getGroupedCaptures(selectedComp);
+        const baseCaptures = await this.getGroupCaptures(selectedBase);
+        const compCaptures = await this.getGroupCaptures(selectedComp);
 
-        this.baseCaptures = baseCaptures;
-        this.compCaptures = compCaptures;
-
-        const shareHashRef = {};
+        const sharedHash = {};
         const combinedList = [];
 
-        baseCaptures.forEach((capture) => {
-          const uid = `s${capture.siteid}-p${capture.pageid}-w${capture.width}-h${capture.height}`;
-          capture.uid = uid;
-          shareHashRef[uid] = { base: capture, comp: {}};
-        });
+        const maxCaptureCount = ( baseCaptures.length > compCaptures.length ) ? baseCaptures.length : compCaptures.length;
 
-        compCaptures.forEach((capture) => {
-          const uid = `s${capture.siteid}-p${capture.pageid}-w${capture.width}-h${capture.height}`;
-          capture.uid = uid;
-          shareHashRef[uid].comp = capture;
-        });
+        for(let i=0; i<maxCaptureCount; i++){
 
-        Object.keys(shareHashRef).forEach((key) => {
-          combinedList.push(shareHashRef[key]);
-        });
+          let baseCapCurrent = baseCaptures[i];
+          let compCapCurrent = compCaptures[i];
 
-        this.combinedGroupCaptures = combinedList
+          const baseCapUID = `s${baseCapCurrent.siteid}-p${baseCapCurrent.pageid}-w${baseCapCurrent.width}-h${baseCapCurrent.height}`;
+          const compCapUID = `s${compCapCurrent.siteid}-p${compCapCurrent.pageid}-w${compCapCurrent.width}-h${compCapCurrent.height}`;
 
-      },
+          if(!sharedHash.hasOwnProperty(baseCapUID)){
+            sharedHash[baseCapUID] = { base: {}, comp: {}, imgDelta: ''};
+          }
+          
+          if(!sharedHash.hasOwnProperty(compCapUID)){
+            sharedHash[compCapUID] = { base: {}, comp: {},  imgDelta: ''};
+          }
 
-      deltaImage: function(v1, v2) {
-        return `${baseURL}/images/diff/${v1}/${v2}`;
-      },
-      getGroupedCaptures: async function(groupID) {
+          sharedHash[baseCapUID].base = baseCapCurrent;
+          sharedHash[compCapUID].comp = compCapCurrent;
 
-        const captureURL = apiRoutes.getCaptureHistory(groupID);
-
-        try {
-          const response = await fetch(captureURL);
-          const json = await response.json();
-
-          return json;
-
-        } catch (error) {
-          console.error(error.message);
-          return ['err'];
         }
-        
-      },
+
+        Object.keys(sharedHash).forEach((key) => {
+          const v1 = sharedHash[key].base.filename;
+          const v2 = sharedHash[key].comp.filename;
+          sharedHash[key].imgDelta = `${baseURL}/images/diff/${v1}/${v2}`;
+          combinedList.push(sharedHash[key]);
+        });
+
+        this.combinedGroupCaptures = combinedList;
+
+      }
     },
-    computed: {},
+    computed: {
+      ...mapWritableState(useCompare, ['selectedBase', 'selectedComp', 'combinedGroupCaptures']),
+    },
     data: () => ({
-      combinedGroupCaptures:[],
-      compCaptures: [],
-      baseCaptures: [],
       companyID: null,
-      siteID: null,
-      selectedBase: null,
-      selectedComp: null
+      siteID: null
     }),
   }
 </script>

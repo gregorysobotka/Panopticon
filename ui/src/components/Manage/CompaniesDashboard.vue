@@ -20,7 +20,7 @@
     </v-col>
   </v-row>
   
-  <AddCompanyForm :newCompany :addCompany />
+  <AddCompanyForm v-if="addCompanyActive" :newCompany :addCompany />
  
 <CompaniesTable v-if="companies.length > 0" :companies />
 </template>
