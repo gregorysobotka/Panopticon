@@ -24,7 +24,6 @@
 </template>
 
 <script>
-  import apiRoutes from '../../apiRoutes';
   const baseURL = process.env.ASSETS_URL;
   import { mapActions, mapState, mapWritableState } from 'pinia';
   import { useCompare } from '@/stores/compare';
