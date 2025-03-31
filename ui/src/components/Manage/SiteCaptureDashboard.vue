@@ -24,7 +24,7 @@
   </v-row>
 
   <v-row>
-    <v-col v-if="!scanCycleComplete" cols="12" class="my-6" min-height="100">
+    <v-col v-if="!captureCycleComplete" cols="12" class="my-6" min-height="100">
       <v-progress-linear
         v-if="scanInProgress"
         color="light-blue"
@@ -46,7 +46,7 @@
         ></v-icon>
       </v-btn>
     </v-col>
-    <v-col v-if="scanCycleComplete" cols="12" class="my-6" min-height="100">
+    <v-col v-if="captureCycleComplete" cols="12" class="my-6" min-height="100">
       <v-btn
         to="/compare"
         class="ma-2"
@@ -116,7 +116,8 @@
     watch: {
       scansCompleted(newValue){
         if(this.scansCompleted >= this.sitePageSpecs.length){
-          this.scanCycleComplete = true;
+          // when all scans have completed as expected, capture cycle is complete
+          this.captureCycleComplete = true;
           this.pageLoadTime = Date.now();
         }
       }
@@ -236,7 +237,7 @@
       pageLoadTime: Date.now(),
       scanInProgress: false,
       scansCompleted: 0,
-      scanCycleComplete: false,
+      captureCycleComplete: false,
       sitePageSpecs: [],
       companyname: '',
       sitename: '',
