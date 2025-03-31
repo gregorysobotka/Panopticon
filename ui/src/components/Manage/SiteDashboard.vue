@@ -39,7 +39,7 @@
 
   <AddPageForm v-if="addPageActive" :addPage :newPage />
 
-  <PagesTable :pages :companyID :siteID />
+  <PagesTable :pages :companyID :siteID :deletePage/>
 
 </template>
 
@@ -55,7 +55,7 @@ export default {
     this.getPages();
   },
   methods: {
-    ...mapActions(usePages, ['getPages', 'addPage', 'setCompanyID', 'setSiteID']),
+    ...mapActions(usePages, ['getPages', 'addPage', 'setCompanyID', 'setSiteID', 'deletePage']),
   },
   computed: {
     ...mapWritableState(usePages, ['newPage', 'addPageActive']),

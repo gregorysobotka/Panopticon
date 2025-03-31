@@ -4,8 +4,6 @@ import { log, error } from '@/log';
 
 export const useCompare = defineStore('compare', {
   state: () => ({
-    compCaptures: [],
-    baseCaptures: [],
     companyID: 0,
     siteID: 0,
     selectedBase: '',
