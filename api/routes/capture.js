@@ -101,7 +101,7 @@ router.get('/companies/:companyID/sites/:siteID/history', async function(req, re
 
     try {
 
-        const groupConstraints = ['year','month','day', 'hour', 'minute'];
+        const groupConstraints = ['year','month','day', 'groupid'];
 
         const allCompanySitePageCaptures = await PageCapture.findAll({
 
