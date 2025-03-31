@@ -24,7 +24,7 @@
   </v-row>
 
   <v-row>
-    <v-col cols="12" class="my-6" min-height="100">
+    <v-col v-if="!captureCycleComplete" cols="12" class="my-6" min-height="100">
       <v-progress-linear
         v-if="scanInProgress"
         color="light-blue"
@@ -46,10 +46,16 @@
         ></v-icon>
       </v-btn>
     </v-col>
+    <v-col v-if="captureCycleComplete" cols="12" class="my-6" min-height="100">
+      <v-btn
+        to="/compare"
+        class="ma-2"
+        color="primary"
+      >
+        Go to comparisons
+      </v-btn>
+    </v-col>
     <v-col cols="12">
-
-
-
       <v-table>
     <thead>
       <tr>
@@ -107,40 +113,47 @@
     beforeMount: function(){
       this.getSitePages();
     },
+    watch: {
+      scansCompleted(newValue){
+        if(this.scansCompleted >= this.sitePageSpecs.length){
+          // when all scans have completed as expected, capture cycle is complete
+          this.captureCycleComplete = true;
+          this.pageLoadTime = Date.now();
+        }
+      }
+    },
     methods: {
       pageLink: (companyID, siteID, pageID) => `/manage/companies/${companyID}/sites/${siteID}/pages/${pageID}`,
       captureReq: async function(spec) {
+          const sitePageCapture = apiRoutes.createNewCapture()
+          
+          const request = new Request(sitePageCapture, {
+              method: "POST",
+              headers: {"Content-Type": "application/json"},
+              body: JSON.stringify(spec)
+            });
 
-        const sitePageCapture = apiRoutes.createNewCapture()
-        
-        const request = new Request(sitePageCapture, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(spec)
-          });
-
-        const captureResponse = await fetch(request);
-
-        const json = await captureResponse.json();
-        
-        if (!captureResponse.ok) {
-            console.error(`Response status: ${captureResponse.status}`);
-        } else {
+          const captureResponse = await fetch(request);
+          const json = await captureResponse.json();
+          
+          if (!captureResponse.ok) {
+              console.error(`Response status: ${captureResponse.status}`);
+          }
+          
           spec.captured = true;
           this.scansCompleted = this.scansCompleted + 1;
-        }
-
+        
+          return new Promise((resolve) => resolve(captureResponse));
       },
       startSiteScan: async function() {
 
         this.scanInProgress = true;
-
         this.pageLoadTime = Date.now();
 
-        const completed = this.sitePageSpecs.map(async (spec) => {
-          await this.captureReq(spec)
-        });
-
+        for(let i = 0; i < this.sitePageSpecs.length; i++){
+          let spec = this.sitePageSpecs[i];
+          let res = await this.captureReq(spec);
+        }
         
       },
       getSitePages: async function() {
@@ -224,6 +237,7 @@
       pageLoadTime: Date.now(),
       scanInProgress: false,
       scansCompleted: 0,
+      captureCycleComplete: false,
       sitePageSpecs: [],
       companyname: '',
       sitename: '',

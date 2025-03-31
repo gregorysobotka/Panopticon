@@ -58,7 +58,7 @@
         const sharedHash = {};
         const combinedList = [];
 
-        const maxCaptureCount = ( baseCaptures.length > compCaptures.length ) ? baseCaptures.length : compCaptures.length;
+        const maxCaptureCount = ( baseCaptures.length > compCaptures.length ) ? compCaptures.length : baseCaptures.length;
 
         for(let i=0; i<maxCaptureCount; i++){
 

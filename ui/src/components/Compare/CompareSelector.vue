@@ -90,19 +90,11 @@
       }
     },
     computed: {
-      activeBaseVersion() {
-        return this.selectedBase !== null;
-      },
       activeCompany() {
         return this.selectedCompany !== null;
       },
       activeSite() {
         return this.selectedSite !== null;
-      },
-      availableComps() {
-        return this.captureHistory.filter((capture) => {
-          return capture.groupid != this.selectedBase;
-        });
       }
     },
     data: () => ({
@@ -111,9 +103,6 @@
       selectedSite: null,
       sites: [],
       companies: [],
-      selectedBase: null,
-      selectedComp: null
-      
     }),
   }
 </script>
