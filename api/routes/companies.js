@@ -3,6 +3,14 @@ var router = express.Router();
 const { Company, Site, Page, CaptureSpecs } = require('../models/db');
 const { Op } = require('sequelize');
 
+const defaultNewPageSpec = { 
+    displayname: 'Default', 
+    description: 'Default capture spec', 
+    width: 1200, 
+    height: 1600, 
+    delay: 2000 
+};
+
 /*
     NOTES: 
     - DO NOT USE `res.status(400).send({ "status": "error", "message": e });` in production. Exposing errors like this provides information that can be used to comprise a site or application.
@@ -165,7 +173,8 @@ router.post('/:companyID/sites/:siteID/pages', async function(req, res, next) {
         const newPage = { path, displayname };
 
         const createdPage = await targetSite.createPage(newPage);
-        
+        const createdSpec = await createdPage.createCapturespec(defaultNewPageSpec);
+
         res.send(createdPage.toJSON());
 
     } catch(e) {
@@ -173,33 +182,6 @@ router.post('/:companyID/sites/:siteID/pages', async function(req, res, next) {
         res.status(400).send({ "status": "error", "message": e });
     }
 });
-
-// router.post('/:companyID/sites/:siteID/pages/:pageID', async function(req, res, next) {
-    
-//     try {
-
-//         const companyID = parseInt(req.params.companyID);
-//         const siteID = parseInt(req.params.siteID);
-        
-//         const { path, displayname } = req.body;
-
-//         const targetSite = await Site.findOne({
-//             where: {
-//                 id: siteID
-//             }
-//         });
-        
-//         const newPage = { path, displayname };
-
-//         const createdPage = await targetSite.createPage(newPage);
-        
-//         res.send(createdPage.toJSON());
-
-//     } catch(e) {
-//         console.log(e)
-//         res.status(400).send({ "status": "error", "message": e });
-//     }
-// });
 
 router.delete('/:companyID/sites/:siteID/pages/:pageID', async function(req, res, next) {
     
@@ -215,7 +197,7 @@ router.delete('/:companyID/sites/:siteID/pages/:pageID', async function(req, res
             }
         });
         
-        res.send(removeSite.toJSON());
+        res.send({ message: `Successfully deleted page with id:${pageID}` });
 
     } catch(e) {
         console.log(e)
@@ -248,6 +230,29 @@ router.post('/:companyID/sites/:siteID/pages/:pageID/specs', async function(req,
 
     } catch(e) {
         console.error(e)
+        res.status(400).send({ "status": "error", "message": e });
+    }
+});
+
+router.delete('/:companyID/sites/:siteID/pages/:pageID/specs/:specID', async function(req, res, next) {
+    
+    try {
+
+        // const companyID = parseInt(req.params.companyID);
+        // const siteID = parseInt(req.params.siteID);
+        // const pageID = parseInt(req.params.pageID);
+        const specID = parseInt(req.params.pageID);
+
+        const removeSpec = await CaptureSpecs.destroy({
+            where: {
+                id: specID
+            }
+        });
+        
+        res.send({ message: `Successfully deleted spec with id:${specID}` });
+
+    } catch(e) {
+        console.log(e)
         res.status(400).send({ "status": "error", "message": e });
     }
 });

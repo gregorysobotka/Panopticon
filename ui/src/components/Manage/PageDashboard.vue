@@ -117,6 +117,7 @@
             <th class="text-left">Screen Height</th>
             <th class="text-left">Delay</th>
             <th class="text-left">Description</th>
+            <th> </th>
           </tr>
         </thead>
         <tbody>
@@ -130,6 +131,7 @@
             <td>{{ spec.height }}px</td>
             <td>{{ spec.delay }}ms</td>
             <td>{{ spec.description }}</td>
+            <td><v-icon icon="mdi-delete" @click="deleteSpec(spec.id)" start/></td>
           </tr>
         </tbody>
       </v-table>
@@ -146,6 +148,28 @@
       this.getSitePages();
     },
     methods: {
+      deleteSpec: async function(specID) {
+        try {
+          console.log(specID)
+          const deleteSpecURL = apiRoutes.deleteSpec(this.companyID, this.siteID, this.pageID, specID);
+
+          const request = new Request(deleteSpecURL, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+          });
+
+          const response = await fetch(request);
+
+          const json = await response.json();
+
+
+          this.getSitePages();
+
+        } catch (error) {
+          console.error(error);
+        }
+
+      },
       pageLink: (companyID, siteID, pageID) => `/manage/companies/${companyID}/sites/${siteID}/pages/${pageID}`,
       getSitePages: async function() {
         // refactor for reuse

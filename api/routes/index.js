@@ -10,6 +10,7 @@ const swaggerDocument = YAML.parse(swaggerFile);
 
 const companiesRoutes = require('./companies.js');
 const captureRoutes = require('./capture.js');
+const backupRoutes = require('./backup.js');
 
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -20,5 +21,6 @@ router.get('/', function(req, res, next) {
 
 router.use('/companies', companiesRoutes);
 router.use('/capture', captureRoutes);
+router.use('/backup', backupRoutes);
 
 module.exports = router;

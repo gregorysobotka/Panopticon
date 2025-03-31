@@ -37,13 +37,22 @@ export const useCompanies = defineStore('companies', {
     selectCompany(companyID) {
       this.companyID = companyID;
     },
+    async exportAllCompanyInfo() {
+      const companyURL = apiRoutes.getCompanies();
+      try {
+        const response = await fetch(companyURL);
+        const json = await response.json();
+
+        this.companies = json;
+
+      } catch (error) {
+        console.error(error.message);
+      }
+    },
     async getCompanies(){
         const companyURL = apiRoutes.getCompanies();
         try {
           const response = await fetch(companyURL);
-          if (!response.ok) {
-            console.error(`Response status: ${response.status}`);
-          }
           const json = await response.json();
 
           json.forEach((company) => {

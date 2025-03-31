@@ -50,6 +50,28 @@ export const usePages= defineStore('pages', {
     setPageID(pageID){
       this.pageID = pageID;
     },
+    async deletePage(pageID) {
+      try {
+
+        const deletePageURL = apiRoutes.deletePage(this.companyID, this.siteID, pageID);
+
+        const request = new Request(deletePageURL, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" }
+        });
+
+        const response = await fetch(request);
+
+        const json = await response.json();
+
+        log('stores.pages.deletePage')(json);
+
+        this.getPages();
+
+      } catch (error) {
+        log('stores.pages.deletePage')(error.message);
+      }
+    },
     async addPage() {
       try {
 
@@ -65,7 +87,7 @@ export const usePages= defineStore('pages', {
 
         const json = await response.json();
 
-        log('stores.pages.getPages')(json);
+        log('stores.pages.addPage')(json);
 
         // clear model after submission
         this.newPage.displayname = '';
@@ -74,7 +96,7 @@ export const usePages= defineStore('pages', {
         this.getPages();
 
       } catch (error) {
-        log('stores.pages.getPages')(error.message);
+        log('stores.pages.addPage')(error.message);
       }
     },
     async getPages() {

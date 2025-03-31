@@ -14,7 +14,7 @@
                             Updated
                         </th>
                         <th>
-                            History
+                            
                         </th>
                     </tr>
                 </thead>
@@ -24,7 +24,7 @@
                                 page.displayname }}</router-link></td>
                         <td>{{ page.createdAt }}</td>
                         <td>{{ page.updatedAt }}</td>
-                        <td><v-icon icon="mdi-history" @click="" start disabled /></td>
+                        <td><v-icon icon="mdi-delete" @click="deletePage(page.id)" start/></td>
                     </tr>
                 </tbody>
             </v-table>
@@ -35,7 +35,7 @@
 <script>
 
 export default {
-    props: ['pages', 'companyID', 'siteID'],
+    props: ['pages', 'companyID', 'siteID', 'deletePage'],
     beforeMount: function () { },
     computed: {},
     methods: {},
