@@ -39,7 +39,7 @@
 
   <AddPageForm v-if="addPageActive" :addPage :newPage />
 
-  <PagesTable :pages :companyID :siteID :deletePage/>
+  <PagesTable :pages :companyID :siteID :deletePage />
 
 </template>
 

@@ -23,13 +23,14 @@ function captureHash(strVal){
         }
 */
 async function screenCapture(captureObject) {
+    const filePath = `../capture/${captureObject.filename}`
     const browser = await chromium.launch();
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.setDefaultTimeout(120000)
     await page.setViewportSize({ width: captureObject.width, height: captureObject.height });
     await page.goto(captureObject.fullurl);
-    const screenshot = await page.screenshot({ path: captureObject.imageurl, fullPage: false });
+    const screenshot = await page.screenshot({ path: filePath, fullPage: false });
     await page.close();
     await browser.close();
     return screenshot;
@@ -38,14 +39,9 @@ async function screenCapture(captureObject) {
 async function compareCaptures(versionOne, versionTwo){
 
     const imagesBasePath = '../capture/';
-    const imagesDiffPath = '../capture/diff/';
 
     const imageOne = `${imagesBasePath}${versionOne}`;
     const imageTwo = `${imagesBasePath}${versionTwo}`;
-
-    const hashStringVal = `compare-${Date.now()}`;
-    const diffFileName = captureHash(hashStringVal);
-    const diffImage = `${imagesDiffPath}${diffFileName}.png`;
 
     const diffedImages = await looksSame.createDiff({
         reference: imageOne,
@@ -76,9 +72,6 @@ function captureObj(allSitePageSpecs) {
         const filenameHash = captureHash(fullPageURL);
         const filename = `${filenameHash}.png`;
 
-        // Potential refactor. Update DB model to only track file name, storage type (ie. cloud vs disk), storage location (bucket for cloud, path for disk)
-        const filePath = `../capture/${filename}`;
-
         const fullSiteCaptureObject = {
             companyname: allSitePageSpecs.displayname,
             sitename: site.displayname,
@@ -87,13 +80,13 @@ function captureObj(allSitePageSpecs) {
             siteid: site.id,
             pageid: page.id,
             fullurl: fullPageURL,
-            imageurl: filePath,
             filename: filename,
             location: site.location,
             language: site.language,
             environment: site.environment,
             width: captureSpec.width,
-            height: captureSpec.height, 
+            height: captureSpec.height,
+            specid: captureSpec.id,
             delay: captureSpec.delay,
             year: runTime.getFullYear(), 
             month: runTime.getMonth(),

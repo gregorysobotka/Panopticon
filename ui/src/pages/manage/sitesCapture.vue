@@ -3,7 +3,6 @@
 </template>
 
 <script>
-  import SiteDashboard from '@/components/Manage/SiteDashboard.vue';
 
   export default {
       beforeMount: function(){},  
