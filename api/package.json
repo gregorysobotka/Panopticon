@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "nmon": "nodemon ./bin/www"
+    "nmon": "nodemon ./bin/www",
+    "dev": "nodemon ./bin/www"
   },
   "dependencies": {
     "chromium": "^3.0.3",
