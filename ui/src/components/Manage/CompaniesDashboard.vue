@@ -11,7 +11,7 @@
             Company
           </v-btn>
         </v-col>
-        <v-col cols="12" class="py-1  ">
+        <v-col cols="12" class="pt-1">
           <a target="_blank" :href="downloadAppData" class="text-decoration-none">
             <v-btn target="" text="Export Data" color="blue-lighten-2" flat block />
           </a>

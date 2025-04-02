@@ -84,7 +84,8 @@ export const useCompanies = defineStore('companies', {
             const json = await res.json();
 
             this.newCompany.displayname = '';
-            this.companies.push(json);
+            
+            this.getCompanies();
             
         } catch (error) {
             console.error(error.message);

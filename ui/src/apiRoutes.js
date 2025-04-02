@@ -10,6 +10,7 @@ const API_ROUTES = {
     getPageSpecs: (companyID, siteID, pageID) => `${API_URL}/companies/${companyID}/sites/${siteID}/pages/${pageID}/specs`,
     getAvailableCaptures: (companyID, siteID) => `${API_URL}/capture/companies/${companyID}/sites/${siteID}/history`,
     getCaptureHistory: (groupID) => `${API_URL}/capture/history/${groupID}`,
+    getGroupDiffCapHistory: (baseGroupID, compGroupID) => `${API_URL}/capture/history/${baseGroupID}/${compGroupID}`,
     downloadAppData: () => `${API_URL}/backup/all`,
 
     createNewCompany: () => `${API_URL}/companies`,

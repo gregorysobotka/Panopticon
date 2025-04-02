@@ -1,7 +1,10 @@
 var express = require('express');
 var router = express.Router();
+const { Sequelize } = require('sequelize');
 const { Company, Site, Page, CaptureSpecs, PageCapture, ComparisonHistory } = require('../models/db');
 const { screenCapture, captureObj, compareCaptures } = require('../services/capture.js');
+const { combineGroupedCaptures } = require('../helpers/combinedGroups.js');
+const Op = Sequelize.Op;
 
 /* GET capture */
 router.get('/', async function(req, res, next) {
@@ -105,7 +108,7 @@ router.get('/companies/:companyID/sites/:siteID/history', async function(req, re
 
         const allCompanySitePageCaptures = await PageCapture.findAll({
 
-            attributes: ['year', 'month', 'day', 'hour','minute', 'groupid', 'createdAt'],
+            attributes: ['year', 'month', 'day', 'hour','minute', 'groupid', 'createdAt', 'companyname', 'sitename'],
             where: {
                 companyid: companyID,
                 siteid: siteID
@@ -140,6 +143,29 @@ router.get('/history/:groupID', async function(req, res, next) {
     
 
         res.send(allCompanySitePageCaptures);
+
+    } catch(e) {
+        console.error(e)
+        res.status(400).send({ "status": "error", "message": "error handling request" });
+    }
+});
+
+router.get('/history/:baseCaptureID/:compCaptureID', async function(req, res, next) {
+
+    const { baseCaptureID, compCaptureID } = req.params;
+
+    try {
+
+        const allCompanySitePageCaptures = await PageCapture.findAll({
+            where: {
+                [Op.or]: [{groupID: baseCaptureID}, {groupID: compCaptureID}]
+            }
+        });
+
+        const combinedCaptures = combineGroupedCaptures(baseCaptureID, compCaptureID, allCompanySitePageCaptures);
+        
+
+        res.send(combinedCaptures);
 
     } catch(e) {
         console.error(e)

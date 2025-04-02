@@ -183,7 +183,7 @@ export default {
       if (this.scansCompleted == 0) {
         return 0;
       } else {
-        return (this.scansCompleted / this.sitePageSpecs.length) * 100;
+        return parseInt((this.scansCompleted / this.sitePageSpecs.length) * 100);
       }
     },
     groupID: function () {

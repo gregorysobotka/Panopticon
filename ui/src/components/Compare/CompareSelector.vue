@@ -1,12 +1,15 @@
 <template>
   <v-row>
+    <v-col class="text-center my-5" cols="12"></v-col>
+  </v-row>
+  <v-row>
     <v-col cols="6">
-      <v-select :items="companies" v-model="selectedCompany" item-title="displayname" item-value="id" density="compact"
+      <v-select :items="companies" v-model="selectedCompany" item-title="displayname" item-value="id"
         label="Company" />
     </v-col>
-    <v-col cols="6" v-if="activeCompany">
-      <v-select :items="sites" v-model="selectedSite" item-title="displayname" item-value="id" density="compact"
-        label="Site" />
+    <v-col cols="6">
+      <v-select :items="sites" v-model="selectedSite" item-title="displayname" item-value="id"
+        label="Site" :disabled="!activeCompany"/>
     </v-col>
 
     <v-col v-if="activeCompany && activeSite" cols="12">
@@ -30,9 +33,6 @@ export default {
     selectedCompany(companyID) {
       this.getAllSites(companyID);
     },
-    selectedSite(siteID) {
-      // this.getAvailableCaptures(siteID);
-    }
   },
   methods: {
 

@@ -31,10 +31,10 @@ module.exports = { PageCaptureModel };
 
 /*
 
-  Decided not to maintain link to company/site/page models.
+  Decided not to maintain link to company/site/page models with capture results.
 
   Reasons:
   - Wanted to treat results as unique, separate data
-  - Focus on getting MVP running
+  - Focus on getting new version running
 
 */
