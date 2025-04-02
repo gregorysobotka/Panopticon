@@ -5,9 +5,7 @@ const { SiteModel } = require('./SiteModel');
 const { PageModel } = require('./PageModel');
 const { CaptureSpecsModel } = require('./CaptureSpecsModel');
 const { PageCaptureModel } = require('./PageCaptureModel');
-const { PageCaptureResultModel } = require('./PageCaptureResultModel');
 const { ComparisonHistoryModel } = require('./ComparisonHistoryModel');
-
 
 const DB_ENGINE = process.env.DB_ENGINE || 'sqlite';
 const sequelizeConfig = { dialect: '' };
@@ -29,14 +27,15 @@ if(DB_ENGINE == 'postgres') {
   sequelizeConfig.storage = './database.sqlite';
 } 
 
+// DB Connection
 const sequelize = new Sequelize(dbName, dbUser, dbPass, sequelizeConfig);
 
+// DB Models
 const Company = sequelize.define('company', CompanyModel);
 const Site = sequelize.define('site', SiteModel);
 const Page = sequelize.define('page', PageModel);
 const CaptureSpecs = sequelize.define('capturespecs', CaptureSpecsModel);
 const PageCapture = sequelize.define('pagecapture', PageCaptureModel);
-const PageCaptureResult = sequelize.define('pagecaptureresult', PageCaptureResultModel);
 const ComparisonHistory = sequelize.define('comparisonhistory', ComparisonHistoryModel);
 
 const PageCaptureSpecs = sequelize.define('pagecapturespecs', {
@@ -56,23 +55,6 @@ const PageCaptureSpecs = sequelize.define('pagecapturespecs', {
   },
 });
 
-const PageCaptureDiffs = sequelize.define('pagecapturediffs', {
-  pcid: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: PageCapture, 
-      key: 'id',
-    },
-  },
-  pcrid: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: PageCaptureResult,
-      key: 'id',
-    },
-  },
-});
-
 
 Company.hasMany(Site);
 Site.belongsTo(Company);
@@ -82,9 +64,6 @@ Page.belongsTo(Site);
 
 Page.hasMany(CaptureSpecs);
 CaptureSpecs.belongsToMany(Page, { through: PageCaptureSpecs });
-
-PageCapture.hasMany(PageCaptureResult);
-PageCaptureResult.belongsToMany(PageCapture, { through: PageCaptureDiffs });
 
 (async () => {
   const forceSync = false;
@@ -104,6 +83,5 @@ module.exports = {
   Page,
   CaptureSpecs,
   PageCapture,
-  PageCaptureResult,
   ComparisonHistory
 };

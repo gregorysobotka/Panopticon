@@ -7,7 +7,6 @@
       :title="item.title"
       class="d-inline-block mx-2 social-link"
       rel="noopener noreferrer"
-      target="_blank"
     >
       <v-icon
         :icon="item.icon"
@@ -20,9 +19,9 @@
 <script setup>
   const items = [
     {
-      title: 'Vuetify Documentation',
+      title: 'Home',
       icon: `$vuetify`,
-      href: 'https://vuetifyjs.com/',
+      href: '/',
     }
   ]
 </script>

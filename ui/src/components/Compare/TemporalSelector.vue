@@ -4,9 +4,9 @@
       <span class="text-h3">{{ activeCompanyName }}</span> <span class="text-h5">{{ activeSiteName }}</span>
     </v-col>
   </v-row>
-  <v-row v-if="captureHistory.length > 0">
+  <v-row v-if="captureGroups.length > 0">
     <v-col cols="6">
-      <v-select :items="captureHistory" v-model="selectedBase" item-title="readableDate" item-value="groupid"
+      <v-select :items="availableBase" v-model="selectedBase" item-title="readableDate" item-value="groupid"
         label="First Version" />
     </v-col>
     <v-col cols="6">
@@ -22,52 +22,26 @@
 </template>
 
 <script>
+import { mapActions, mapState, mapWritableState } from 'pinia';
+import { useCompare } from '@/stores/compare';
 import apiRoutes from '../../apiRoutes';
-
-// temporary only -- plan to remove date-format
 import dateFormat from 'date-format';
 
 export default {
   beforeMount: function () {
 
-    this.getCompanies();
-
     const routeCompanyID = this.$route.params.companyID;
     const routeSiteID = this.$route.params.siteID;
-
+    
     this.companyID = routeCompanyID;
     this.siteID = routeSiteID;
-
-    this.getAllSites(routeCompanyID);
-    this.getAvailableCaptures(routeCompanyID, routeSiteID);
+    
+    this.getCaptureGroups();
 
   },
   watch: {},
   methods: {
-    readableDate: function (date) {
-      const parsedDate = dateFormat.parse(dateFormat.ISO8601_FORMAT, date);
-      return parsedDate.toString();
-    },
-    getAvailableCaptures: async function (companyID, siteID) {
-
-      const requestURL = apiRoutes.getAvailableCaptures(companyID, siteID);
-
-      try {
-        const response = await fetch(requestURL);
-        const json = await response.json();
-
-        const modifiedCaptures = json.map((capture) => {
-          capture.readableDate = this.readableDate(capture.createdAt);
-          return capture;
-        });
-        console.log(modifiedCaptures)
-        this.captureHistory = modifiedCaptures;
-
-      } catch (error) {
-        console.error(error.message);
-      }
-
-    },
+    ...mapActions(useCompare, ['getGroupCaptures', 'getGroupDiffs', 'getCaptureGroups']),
     trackComparison: async function () {
 
       const compHistoryURL = apiRoutes.createCompHistory();
@@ -96,74 +70,18 @@ export default {
 
 
     },
-    getAllSites: async function (companyID) {
-
-      const requestURL = apiRoutes.getAllSites(companyID);
-
-      try {
-        const response = await fetch(requestURL);
-        if (!response.ok) {
-          console.error(`Response status: ${response.status}`);
-        }
-        const json = await response.json();
-        this.sites = json.sites;
-
-      } catch (error) {
-        console.error(error.message);
-      }
-
-    },
-    getCompanies: async function () {
-
-      const companyURL = apiRoutes.getCompanies();
-
-      try {
-        const response = await fetch(companyURL);
-        if (!response.ok) {
-          console.error(`Response status: ${response.status}`);
-        }
-        const json = await response.json();
-        this.companies = json;
-
-      } catch (error) {
-        console.error(error.message);
-      }
-
-    }
   },
   computed: {
-    activeBaseVersion() {
-      return this.selectedBase !== null;
-    },
+    ...mapWritableState(useCompare, ['selectedBase', 'selectedComp', 'combinedCaptures', 'companyID', 'siteID']),
+    ...mapState(useCompare, ['captureGroups', 'availableBase', 'availableComps', 'readyForComp']),
     activeCompanyName() {
-      const company = this.companies.filter((company) => company.id == this.companyID);
-      return (company.length > 0) ? company[0].displayname : '';
+      return (this.captureGroups.length > 0) ? this.captureGroups[0].companyname : '';
     },
     activeSiteName() {
-      const site = this.sites.filter((site) => site.id == this.siteID);
-      return (site.length > 0) ? site[0].displayname : '';
-    },
-    availableComps() {
-      return this.captureHistory.filter((capture) => capture.groupid != this.selectedBase);
-    },
-    readyForComp() {
-      return (this.selectedBase !== null && this.selectedComp !== null);
+      return (this.captureGroups.length > 0) ? this.captureGroups[0].sitename : '';
     }
   },
   data: () => ({
-    combinedGroupCaptures: [],
-    combinedGroupCapturesRef: [],
-    combinedGroupID: '',
-    activeComparison: false,
-    compCaptures: [],
-    baseCaptures: [],
-    captureHistory: [],
-    companyID: null,
-    siteID: null,
-    sites: [],
-    companies: [],
-    selectedBase: null,
-    selectedComp: null
 
   }),
 }
