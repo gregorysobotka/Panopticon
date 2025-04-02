@@ -25,7 +25,6 @@
 import { mapActions, mapState, mapWritableState } from 'pinia';
 import { useCompare } from '@/stores/compare';
 import apiRoutes from '../../apiRoutes';
-import dateFormat from 'date-format';
 
 export default {
   beforeMount: function () {
@@ -69,18 +68,6 @@ export default {
       this.$router.push(comparisonResultsLink);
 
 
-    this.companyID = routeCompanyID;
-    this.siteID = routeSiteID;
-
-    this.getAllSites(routeCompanyID);
-    this.getAvailableCaptures(routeCompanyID, routeSiteID);
-
-  },
-  watch: {},
-  methods: {
-    readableDate: function (date) {
-      const parsedDate = dateFormat.parse(dateFormat.ISO8601_FORMAT, date);
-      return parsedDate.toString();
     },
   },
   computed: {
