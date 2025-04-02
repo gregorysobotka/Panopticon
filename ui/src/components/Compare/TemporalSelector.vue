@@ -69,6 +69,18 @@ export default {
       this.$router.push(comparisonResultsLink);
 
 
+    this.companyID = routeCompanyID;
+    this.siteID = routeSiteID;
+
+    this.getAllSites(routeCompanyID);
+    this.getAvailableCaptures(routeCompanyID, routeSiteID);
+
+  },
+  watch: {},
+  methods: {
+    readableDate: function (date) {
+      const parsedDate = dateFormat.parse(dateFormat.ISO8601_FORMAT, date);
+      return parsedDate.toString();
     },
   },
   computed: {
